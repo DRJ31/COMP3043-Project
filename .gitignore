@@ -1,2 +1,6 @@
 # Folders
 .idea/
+
+#Files
+.DS_Store
+lost_found/config.py

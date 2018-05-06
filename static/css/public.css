@@ -1,0 +1,56 @@
+body {
+    overflow-x: hidden;
+}
+
+.search-button {
+    background-color: white;
+    border-left: white;
+}
+
+.form-signin {
+    width: 100%;
+    text-align: center;
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+.input-bottom {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.input-top {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.input-middle {
+    border-radius: 0;
+}
+
+.long-modal {
+    height: 600px;
+}
+
+.container-phone {
+    margin-top: 50px;
+}
+
+.jumbotron-width {
+    width: 70%;
+    margin-left: 15%;
+}
+@media (max-width: 767px) {
+    .hide-sm {
+        display: none;
+    }
+    .container-phone {
+        padding: 0;
+        margin-top: 0;
+    }
+    .jumbotron-width {
+        width: 100%;
+        margin-left: 0;
+    }
+}
