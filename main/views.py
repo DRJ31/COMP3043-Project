@@ -42,7 +42,7 @@ def search(request):
     if len(location) > 2:
         data = data.filter(locationrange__in=location)
     if len(key) > 0:
-        data = data.filter(Q(name__icontains=key) | Q(location__icontains=key))
+        data = data.filter(Q(name__icontains=key) | Q(location__icontains=key) | Q(poster__icontains=key))
     if int(date) == 0:
         data = data.filter(date__range=[datetime.now() - timedelta(days=7), datetime.now()]).order_by("-date")
     elif int(date) == 1:

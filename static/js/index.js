@@ -2,13 +2,21 @@ $(document).ready(function () {
     $("#read").click(function () {
         $("#new").addClass('d-none');
     });
-    $(document).keyup(function (event) {
-        if (event.keyCode === 13) {
-            searching($("#search"), null);
-        }
+    $("#clear").click(function () {
+        $("#search").val("");
+        searching($("#search"), 3);
+        $("#icon").removeClass("fa-times").addClass("fa-search");
     });
-
 });
+
+function changeIcon(obj) {
+    searching(obj, 3);
+    if ($("#search").val().length > 0)
+        $("#icon").removeClass("fa-search").addClass("fa-times");
+    else
+        $("#icon").removeClass("fa-times").addClass("fa-search");
+
+}
 
 function get_data(obj, type) {
     var data = [];
@@ -66,7 +74,6 @@ function searching(obj, type) {
         date: data[1],
         location: '[' + data[2].toString() + ']'
     }, function (data) {
-        console.log(data);
         printHTML(data);
     });
 }
