@@ -4,3 +4,5 @@
 #Files
 .DS_Store
 lost_found/config.py
+*.jpg
+*.png
