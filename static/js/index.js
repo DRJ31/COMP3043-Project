@@ -1,4 +1,8 @@
 $(document).ready(function () {
+    if (LANGUAGE === "en") {
+        $("#chinese").removeClass("active");
+        $("#english").addClass("active");
+    }
     $("#read").click(function () {
         $("#new").addClass('d-none');
     });
@@ -9,7 +13,7 @@ $(document).ready(function () {
     });
 });
 
-function changeIcon(obj) {
+function changeIcon(obj) {//Change icon of search box
     searching(obj, 3);
     if ($("#search").val().length > 0)
         $("#icon").removeClass("fa-search").addClass("fa-times");
@@ -18,7 +22,7 @@ function changeIcon(obj) {
 
 }
 
-function get_data(obj, type) {
+function get_data(obj, type) {//Get all the data to filter from webpage
     var data = [];
     for (var i = 3; i < 6; i++) {
         if ($('.dropdown-item')[i].className.indexOf("active") > 0) {
@@ -64,7 +68,7 @@ function get_data(obj, type) {
     return data;
 }
 
-function searching(obj, type) {
+function searching(obj, type) {//Fetch search result from backend
     if (obj.tagName === 'A')
         $(obj).addClass("active");
     var data = get_data(obj, type);
@@ -78,7 +82,7 @@ function searching(obj, type) {
     });
 }
 
-function printHTML(data) {
+function printHTML(data) {//Print search result
     var str = '<li class="list-group-item bg-light">\n' +
         '            <div class="row">\n' +
         '                <div class="col-4 col-md font-weight-bold">Name</div>\n' +
@@ -117,7 +121,15 @@ function printHTML(data) {
     $("#mainTable").html(str);
 }
 
-function show_detail(num) {
-    console.log("/detail/" + num + "/");
+function show_detail(num) {//Go to the detail page
     window.location.href = "/detail/" + num + "/";
+}
+
+function submitLang(language) { //Change the language
+    $.post('/i18n/setlang/', {
+        language: language,
+        next: "/"
+    }, function (data) {
+        location.reload();
+    });
 }

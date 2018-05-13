@@ -1,0 +1,125 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-05-13 20:03+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\templates\detail.html:59
+#, fuzzy
+#| msgid "查看详情"
+msgid "详情"
+msgstr "Detail"
+
+#: .\templates\index.html:3
+msgid "公告"
+msgstr "Bulletin"
+
+#: .\templates\index.html:4
+msgid "遗失"
+msgstr "Lost"
+
+#: .\templates\index.html:5
+msgid "找回"
+msgstr "Found"
+
+#: .\templates\index.html:6
+msgid "位置"
+msgstr "Location"
+
+#: .\templates\index.html:7
+msgid "日期"
+msgstr "Date"
+
+#: .\templates\index.html:8
+msgid "全部"
+msgstr "All"
+
+#: .\templates\index.html:62
+msgid "登录"
+msgstr "Login"
+
+#: .\templates\index.html:63
+msgid "注册"
+msgstr "Register"
+
+#: .\templates\index.html:70
+msgid "个人资料"
+msgstr "Profile"
+
+#: .\templates\index.html:71
+msgid "设置"
+msgstr "Settings"
+
+#: .\templates\index.html:72
+msgid "退出"
+msgstr "Logout"
+
+#: .\templates\index.html:75
+msgid "发布"
+msgstr "New Post"
+
+#: .\templates\index.html:81
+msgid "搜索"
+msgstr "Search"
+
+#: .\templates\index.html:108
+msgid "教学楼"
+msgstr "Teaching Buildings"
+
+#: .\templates\index.html:114
+msgid "校园餐厅"
+msgstr "Canteen"
+
+#: .\templates\index.html:120
+msgid "宿舍楼"
+msgstr "Dormitory"
+
+#: .\templates\index.html:126
+msgid "机房"
+msgstr "Computer Room"
+
+#: .\templates\index.html:132
+msgid "其他"
+msgstr "Others"
+
+#: .\templates\index.html:146
+msgid "过去一周"
+msgstr "Last Week"
+
+#: .\templates\index.html:147
+msgid "过去一个月"
+msgstr "Last Month"
+
+#: .\templates\index.html:153
+msgid "结果"
+msgstr "Results"
+
+#: .\templates\index.html:160
+msgid "物品"
+msgstr "Name"
+
+#: .\templates\index.html:163
+msgid "发布者"
+msgstr "Poster"
+
+#: .\templates\index.html:184
+msgid "查看详情"
+msgstr "View Detail"
+
+#: .\templates\index.html:206
+msgid "标记为已读"
+msgstr "Mark as read"

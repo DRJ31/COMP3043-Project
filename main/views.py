@@ -15,7 +15,8 @@ def index(request):
     return render(request, 'index.html', {
         'data': data,
         'bulletin': bulletin,
-        'length': len(data)
+        'length': len(data),
+        'Language': request.LANGUAGE_CODE
     })
 
 

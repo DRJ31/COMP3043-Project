@@ -1,4 +1,11 @@
 {% load static %}
+{% load i18n %}
+{% trans "公告" as BULLETIN %}
+{% trans "遗失" as LOST %}
+{% trans "找回" as FOUND %}
+{% trans "位置" as LOCATION %}
+{% trans "日期" as DATE %}
+{% trans "全部" as ALL %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +21,15 @@
     <!--<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>-->
     <script src="https://cdn.bootcss.com/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script>
+        var LANGUAGE = '{{ Language }}';
+        $.ajaxSetup({
+            data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
+        });
+    </script>
     <script src="{% static 'js/index.js' %}"></script>
+
 </head>
 <body>
 <!--Navigation Bar-->
@@ -29,31 +44,41 @@
         <!--Left Navbar-->
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="#" data-toggle="modal" data-target="#bulletin">Bulletin <span
+                <a class="nav-link" href="#" data-toggle="modal" data-target="#bulletin">{{ BULLETIN }} <span
                         class="badge badge-primary" id="new">New!</span></a>
             </li>
         </ul>
         <!--Right Navbar-->
-        <button class="btn btn-outline-success my-2 my-sm-0">Login</button>
-        <button class="btn btn-primary ml-2">Sign Up</button>
-        <div class="dropdown mr-4 mb-2 d-none">
+        <div class="dropdown mr-4 mb-2">
+            <div class="dropdown-toggle" id="language" data-toggle="dropdown" aria-haspopup="true"
+                 aria-expanded="false">
+                Language
+            </div>
+            <div class="dropdown-menu clearfix" aria-describedby="userMenu">
+                <a href="#" class="dropdown-item active" id="chinese" onclick="submitLang('zh-hans')">中文</a>
+                <a href="#" class="dropdown-item" id="english" onclick="submitLang('en')">English</a>
+            </div>
+        </div>
+        <button class="btn btn-outline-success my-2 my-sm-0">{% trans "登录" %}</button>
+        <button class="btn btn-primary ml-2">{% trans "注册" %}</button>
+        <div class="dropdown mr-4 mb-2">
             <div class="dropdown-toggle" id="userMenu" data-toggle="dropdown" aria-haspopup="true"
                  aria-expanded="false">
                 ECWU
             </div>
             <div class="dropdown-menu clearfix" aria-describedby="userMenu">
-                <a href="" class="dropdown-item">Profile</a>
-                <a href="" class="dropdown-item">Settings</a>
-                <a href="" class="dropdown-item">Sign out</a>
+                <a href="" class="dropdown-item">{% trans "个人资料" %}</a>
+                <a href="" class="dropdown-item">{% trans "设置" %}</a>
+                <a href="" class="dropdown-item">{% trans "退出" %}</a>
             </div>
         </div>
-        <button class="btn btn-primary d-none" data-toggle="modal" data-target="#newPost">New Post</button>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#newPost">{% trans "发布" %}</button>
     </div>
 </nav>
 <!--Main Content-->
 <div class="container mt-3">
     <div class="input-group has-feedback">
-        <input type="text" class="form-control" placeholder="Search" id="search" oninput="changeIcon(this)">
+        <input type="text" class="form-control" placeholder="{% trans "搜索" %}" id="search" oninput="changeIcon(this)">
         <div class="input-group-append">
             <span class="input-group-text btn search-button" id="clear">
                 <i class="fas fa-search" id="icon"></i>
@@ -63,47 +88,48 @@
     <div class="d-flex flex-row mt-3">
         <div class="dropdown">
             <button class="btn btn-light dropdown-toggle" data-toggle="dropdown" id="lostOrFound" aria-haspopup="true"
-                    aria-expanded="false">Lost/Found
+                    aria-expanded="false">
+                {{ LOST }}/{{ FOUND }}
             </button>
             <div class="dropdown-menu" aria-describedby="lostOrFound">
-                <a href="#" class="dropdown-item active" onclick="searching(this, 0)">All</a>
-                <a href="#" class="dropdown-item" onclick="searching(this, 0)">Lost</a>
-                <a href="#" class="dropdown-item" onclick="searching(this, 0)">Found</a>
+                <a href="#" class="dropdown-item active" onclick="searching(this, 0)">{{ ALL }}</a>
+                <a href="#" class="dropdown-item" onclick="searching(this, 0)">{{ LOST }}</a>
+                <a href="#" class="dropdown-item" onclick="searching(this, 0)">{{ FOUND }}</a>
             </div>
         </div>
         <div class="dropdown ml-3">
             <button class="btn btn-light dropdown-toggle" data-toggle="dropdown" id="filterByLocation"
-                    aria-haspopup="true" aria-expanded="false">Location
+                    aria-haspopup="true" aria-expanded="false">{{ LOCATION }}
             </button>
             <div class="dropdown-menu" aria-describedby="filterByLocation">
                 <div class="form-check dropdown-item">
                     <input class="form-check-input locations" type="checkbox" value="T" id="teachingBuilding">
                     <label class="form-check-label" for="teachingBuilding">
-                        Teaching Buildings
+                        {% trans "教学楼" %}
                     </label>
                 </div>
                 <div class="form-check dropdown-item">
                     <input class="form-check-input locations" type="checkbox" value="C" id="canteen">
                     <label class="form-check-label" for="canteen">
-                        Canteens
+                        {% trans "校园餐厅" %}
                     </label>
                 </div>
                 <div class="form-check dropdown-item">
                     <input class="form-check-input locations" type="checkbox" value="D" id="dorm">
                     <label class="form-check-label" for="dorm">
-                        Dormitory
+                        {% trans "宿舍楼" %}
                     </label>
                 </div>
                 <div class="form-check dropdown-item">
                     <input class="form-check-input locations" type="checkbox" value="P" id="computerRoom">
                     <label class="form-check-label" for="computerRoom">
-                        Computer Room
+                        {% trans "机房" %}
                     </label>
                 </div>
                 <div class="form-check dropdown-item">
                     <input class="form-check-input locations" type="checkbox" value="O" id="other">
                     <label class="form-check-label" for="other">
-                        Other
+                        {% trans "其他" %}
                     </label>
                 </div>
                 <div class="d-flex justify-content-center">
@@ -114,27 +140,27 @@
         <div class="dropdown ml-3">
             <button class="btn btn-light dropdown-toggle" data-toggle="dropdown" id="filterByDate" aria-haspopup="true"
                     aria-expanded="false">
-                Date
+                {{ DATE }}
             </button>
             <div class="dropdown-menu" aria-describedby="filterByDate">
-                <a href="#" class="dropdown-item active" onclick="searching(this, 1)">Last Week</a>
-                <a href="#" class="dropdown-item" onclick="searching(this, 1)">Last Month</a>
-                <a href="#" class="dropdown-item" onclick="searching(this, 1)">All</a>
+                <a href="#" class="dropdown-item active" onclick="searching(this, 1)">{% trans "过去一周" %}</a>
+                <a href="#" class="dropdown-item" onclick="searching(this, 1)">{% trans "过去一个月" %}</a>
+                <a href="#" class="dropdown-item" onclick="searching(this, 1)">{{ ALL }}</a>
             </div>
         </div>
     </div>
     <div class="d-flex flex-row">
-        <div class="p-2 text-secondary">Results <span class="badge badge-primary badge-pill"
+        <div class="p-2 text-secondary">{% trans "结果" %} <span class="badge badge-primary badge-pill"
                                                       id="numOfResults">{{ length }}</span></div>
     </div>
     <ul class="list-group mb-5" id="mainTable">
         <!--Title of table-->
         <li class="list-group-item bg-light">
             <div class="row">
-                <div class="col-4 col-md font-weight-bold">Name</div>
-                <div class="col-4 col-md font-weight-bold">Location</div>
-                <div class="col-4 col-md font-weight-bold">Date</div>
-                <div class="col-md font-weight-bold hide-sm">Poster</div>
+                <div class="col-4 col-md font-weight-bold">{% trans "物品" %}</div>
+                <div class="col-4 col-md font-weight-bold">{{ LOCATION }}</div>
+                <div class="col-4 col-md font-weight-bold">{{ DATE }}</div>
+                <div class="col-md font-weight-bold hide-sm">{% trans "发布者" %}</div>
                 <div class="col font-weight-bold"></div>
             </div>
         </li>
@@ -154,8 +180,8 @@
                     <div class="col-4 col-md">{{ info.date|date:"Y-m-d" }}</div>
                     <div class="col-md hide-sm">{{ info.poster }}</div>
                     <div class="col mt-1">
-                        <button class="btn btn-sm btn-secondary m-auto" onclick="show_detail({{ info.pid }})">View
-                            Detail
+                        <button class="btn btn-sm btn-secondary m-auto" onclick="show_detail({{ info.pid }})">
+                            {% trans "查看详情" %}
                         </button>
                     </div>
                 </div>
@@ -168,7 +194,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Bulletin</h5>
+                <h5 class="modal-title">{{ BULLETIN }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -177,57 +203,7 @@
                 {{ bulletin }}
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal" id="read">Mark as read</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!--New Post-->
-<div class="modal fade" id="newPost" tabindex="-1" role="dialog" aria-labelledby="newPost" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content long-modal">
-            <div class="modal-header">
-                <h5 class="modal-title">New Post</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" style="overflow-y: auto">
-                <form action="">
-                    <div class="form-group">
-                        <label for="objectName">Name</label>
-                        <input type="text" class="form-control" id="objectName" aria-describedby="nameHelp">
-                        <small id="nameHelp" class="form-text text-muted">Name of lost or found object.</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="locationRange">Location Range</label>
-                        <select class="form-control" id="locationRange">
-                            <option>Teaching Buildings</option>
-                            <option>Canteens</option>
-                            <option>Dormitory</option>
-                            <option>Other</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="objectName">Location</label>
-                        <input type="text" class="form-control" id="location" aria-describedby="locationHelp">
-                        <small id="locationHelp" class="form-text text-muted">e.g. T8, V27 Lobby</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="description">Description</label>
-                        <textarea class="form-control" id="description" rows="3"
-                                  placeholder="Write your description of the object"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="contact">Contacts</label>
-                        <textarea class="form-control" id="contact" rows="3"
-                                  placeholder="Write whatever ways you want others to contact you"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="post">Post</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal" id="read">{% trans "标记为已读" %}</button>
             </div>
         </div>
     </div>
