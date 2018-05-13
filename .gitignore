@@ -6,3 +6,6 @@
 lost_found/config.py
 *.jpg
 *.png
+
+# Python Pre-compiled cache
+*.pyc
