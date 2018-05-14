@@ -54,3 +54,9 @@ def search(request):
         string += str(info) + ','
     string = string[:-1] + "]"
     return HttpResponse(string)
+
+def login(request):
+    return render(request, 'signin.html')
+
+def register(request):
+    return render(request, 'register.html')
