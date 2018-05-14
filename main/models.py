@@ -52,7 +52,7 @@ class Userinfo(models.Model):
     email = models.TextField(blank=True, null=True)
     password = models.TextField(blank=True, null=True)
     role = models.CharField(max_length=5)
-    activated = models.CharField(max_length=1)
+    activated = models.BooleanField()
     uid = models.AutoField(primary_key=True)
 
     class Meta:
