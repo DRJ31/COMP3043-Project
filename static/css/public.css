@@ -15,6 +15,18 @@ body {
     margin: 0 auto;
 }
 
+.form-signin .form-control {
+    position: relative;
+    box-sizing: border-box;
+    height: auto;
+    font-size: 16px;
+    padding: 10px;
+}
+
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+
 .input-bottom {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
@@ -23,10 +35,12 @@ body {
 .input-top {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+    margin-bottom: -1px;
 }
 
 .input-middle {
     border-radius: 0;
+    margin-bottom: -1px;
 }
 
 .long-modal {
@@ -41,14 +55,17 @@ body {
     width: 70%;
     margin-left: 15%;
 }
+
 @media (max-width: 767px) {
     .hide-sm {
         display: none;
     }
+
     .container-phone {
         padding: 0;
         margin-top: 0;
     }
+
     .jumbotron-width {
         width: 100%;
         margin-left: 0;
