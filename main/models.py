@@ -8,18 +8,6 @@
 from django.db import models
 
 
-class Bulletin(models.Model):
-    bid = models.AutoField(primary_key=True)
-    uid = models.IntegerField(blank=True, null=True)
-    time = models.DateTimeField(blank=True, null=True)
-    content = models.TextField(blank=True, null=True)
-    status = models.CharField(max_length=1, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'bulletin'
-
-
 class Post(models.Model):
     pid = models.AutoField(primary_key=True)
     poster = models.TextField(blank=True, null=True)
@@ -44,17 +32,3 @@ class Readed(models.Model):
     class Meta:
         managed = False
         db_table = 'readed'
-
-
-class Userinfo(models.Model):
-    username = models.TextField(blank=True, null=True)
-    nickname = models.TextField(blank=True, null=True)
-    email = models.TextField(blank=True, null=True)
-    password = models.TextField(blank=True, null=True)
-    role = models.CharField(max_length=5)
-    activated = models.BooleanField()
-    uid = models.AutoField(primary_key=True)
-
-    class Meta:
-        managed = False
-        db_table = 'userinfo'

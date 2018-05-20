@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from main.models import Post, Bulletin
+from main.models import Post
 from django.http import HttpResponse
 from django.db.models import Q
 from datetime import datetime, timedelta
@@ -9,12 +9,10 @@ from datetime import datetime, timedelta
 
 def index(request):
     data = []
-    bulletin = Bulletin.objects.get(status='Y').content
     for info in Post.objects.filter(date__range=[datetime.now() - timedelta(days=7), datetime.now()]).order_by('-date'):
         data.append(info)
     return render(request, 'index.html', {
         'data': data,
-        'bulletin': bulletin,
         'length': len(data)
     })
 
