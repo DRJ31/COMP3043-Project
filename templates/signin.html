@@ -35,17 +35,33 @@
         <!--<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Login</button>-->
     </div>
 </nav>
-<form action="" class="form-signin">
+
+{% if form.errors %}
+<div class="alert alert-danger" role="alert">
+  Authentication failed, please try again.
+  <br>
+  {{ user.username }} / {{ user.password }}
+</div>
+{% endif %}
+
+{% if user.is_authenticated %}
+<div class="alert alert-info" role="alert">
+  {{ user.username }}, You are already signed in!
+</div>
+{% else %}
+
+<form action="" method="post" class="form-signin">
+    {% csrf_token %}
     <h1 class="mb-3 h3">UIC Lost &amp; Found</h1>
     <label for="email" class="sr-only">Email or username</label>
-    <input type="text" id="email" name="account" class="form-control input-top" placeholder="Email or username" required
+    <input type="text" id="email" name="username" class="form-control input-top" placeholder="Email or username" required
            autofocus>
     <label for="password" class="sr-only">Password</label>
     <input type="password" id="password" name="password" class="form-control mb-3 input-bottom" placeholder="Password"
            required autofocus>
     <div class="mb-1">
         <label class="mr-3">
-            <input type="checkbox" value="remember">
+            <input type="checkbox">
             Remember me
         </label>
         <a href="">Forget password</a>
@@ -53,5 +69,7 @@
     <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
     <button class="btn btn-lg btn-block btn-secondary">Sign Up</button>
 </form>
+{% endif %}
+
 </body>
 </html>

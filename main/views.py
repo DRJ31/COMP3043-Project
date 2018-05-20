@@ -1,7 +1,10 @@
-from django.shortcuts import render
-from main.models import Post
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.db.models import Q
+from main.models import Post
 from datetime import datetime, timedelta
 
 # Create your views here.
@@ -53,8 +56,6 @@ def search(request):
     string = string[:-1] + "]"
     return HttpResponse(string)
 
-def login(request):
-    return render(request, 'signin.html')
 
 def register(request):
     return render(request, 'register.html')
