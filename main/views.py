@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 
 def index(request):
     data = []
-    for info in Post.objects.filter(date__range=[datetime.now() - timedelta(days=7), datetime.now()]).order_by('-date'):
+    for info in Post.objects.filter(status__in=['L', 'F'], date__range=[datetime.now() - timedelta(days=7), datetime.now()]).order_by('-date'):
         data.append(info)
     return render(request, 'index.html', {
         'data': data,
