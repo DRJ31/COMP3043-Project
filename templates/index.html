@@ -31,10 +31,10 @@
 
         {% if user.is_authenticated %}
 
-        <div class="dropdown mr-4 mb-2">
-            <div class="dropdown-toggle" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div class="dropdown mr-2">
+            <button class="btn btn-light dropdown-toggle" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {{ user.username }}
-            </div>
+            </button>
             <div class="dropdown-menu clearfix" aria-describedby="userMenu">
                 <a href="" class="dropdown-item">Profile</a>
                 <a href="" class="dropdown-item">Settings</a>
