@@ -108,7 +108,7 @@ function printHTML(data) {
             '                <div class="col-4 col-md">' + arr[i][2] + '</div>\n' +
             '                <div class="col-4 col-md">' + arr[i][3] + '</div>\n' +
             '                <div class="col-md hide-sm">' + arr[i][4] + '</div>\n' +
-            '                <div class="col mt-1">\n' +
+            '                <div class="col">\n' +
             '                    <button class="btn btn-sm btn-secondary m-auto" onclick="show_detail(' + arr[i][5] + ')">View Detail</button>\n' +
             '                </div>\n' +
             '            </div>\n' +
