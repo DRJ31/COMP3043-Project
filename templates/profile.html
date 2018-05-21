@@ -33,8 +33,8 @@
                 {{ user.username }}
             </button>
             <div class="dropdown-menu clearfix" aria-describedby="userMenu">
-                <a href="" class="dropdown-item">Profile</a>
-                <a href="" class="dropdown-item">Settings</a>
+                <a href="/profile" class="dropdown-item">Profile</a>
+                <a href="/settings" class="dropdown-item">Settings</a>
                 <a href="/logout" class="dropdown-item">Sign out</a>
             </div>
         </div>
@@ -50,6 +50,9 @@
 
     </div>
 </nav>
+
+{% if user.is_authenticated %}
+
 <div class="container mt-3">
     <div class="row">
         <div class="col-md-3 mb-3">
@@ -61,7 +64,7 @@
         <div class="col-md-9">
             <h2>Change Password</h2>
             <form action="">
-                <!--<div class="form-group">
+                <div class="form-group">
                     <label for="oldPass">Old Password</label>
                     <input type="password" class="form-control" id="oldPass">
                 </div>
@@ -73,7 +76,7 @@
                     <label for="confirmPass">Confirm New Password</label>
                     <input type="password" class="form-control" id="confirmPass">
                 </div>
-                <button class="btn btn-primary" type="submit">Change Password</button>-->
+                <button class="btn btn-primary" type="submit">Change Password</button>
                 <div class="form-group">
 
                 </div>
@@ -81,5 +84,22 @@
         </div>
     </div>
 </div>
+
+{% else %}
+
+<div class="alert alert-info" role="alert">
+    <h4>You are not permitted to visit this page.</h4>
+
+    <hr>
+
+    <h5>You are not logged in.</h5>
+    <ul>
+      <li>If you have an account, click "Login" on the right-top corner.</li>
+      <li>If you do not have an account, click "Sign Up" on the right-top corner.</li>
+    </ul>
+</div>
+
+{% endif %}
+
 </body>
 </html>
