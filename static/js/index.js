@@ -20,7 +20,9 @@ function changeIcon(obj) {
 
 function get_data(obj, type) {
     var data = [];
-    for (var i = 3; i < 6; i++) {
+
+    // Lost / Found (Dropdown 1)
+    for (var i = 0; i < 3; i++) {
         if ($('.dropdown-item')[i].className.indexOf("active") > 0) {
             if ($(obj).html() !== $('.dropdown-item')[i].innerHTML && type === 0) {
                 $('.dropdown-item')[i].className = "dropdown-item";
@@ -37,7 +39,9 @@ function get_data(obj, type) {
             }
         }
     }
-    for (i = 11; i < 14; i++) {
+
+    // Time (Dropdown 3)
+    for (i = 8; i < 11; i++) {
         if ($('.dropdown-item')[i].className.indexOf("active") > 0) {
             if ($(obj).html() !== $('.dropdown-item')[i].innerHTML && type === 1) {
                 $('.dropdown-item')[i].className = "dropdown-item";
@@ -54,6 +58,8 @@ function get_data(obj, type) {
             }
         }
     }
+
+    // Location (Dropdown 2)
     var checked = [];
     for (i = 0; i < 5; i++) {
         if ($(".locations")[i].checked) {
@@ -108,8 +114,8 @@ function printHTML(data) {
             '                <div class="col-4 col-md">' + arr[i][2] + '</div>\n' +
             '                <div class="col-4 col-md">' + arr[i][3] + '</div>\n' +
             '                <div class="col-md hide-sm">' + arr[i][4] + '</div>\n' +
-            '                <div class="col mt-1">\n' +
-            '                    <button class="btn btn-sm btn-secondary m-auto" onclick="show_detail(' + arr[i][5] + ')">View Detail</button>\n' +
+            '                <div class="col">\n' +
+            '                    <a href="/detail/' + arr[i][5] + '"><button class="btn btn-sm btn-secondary m-auto">View Detail</button></a>' +
             '                </div>\n' +
             '            </div>\n' +
             '        </li>';

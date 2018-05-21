@@ -31,13 +31,13 @@
 
         {% if user.is_authenticated %}
 
-        <div class="dropdown mr-4 mb-2">
-            <div class="dropdown-toggle" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div class="dropdown mr-2">
+            <button class="btn btn-light dropdown-toggle" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {{ user.username }}
-            </div>
+            </button>
             <div class="dropdown-menu clearfix" aria-describedby="userMenu">
-                <a href="" class="dropdown-item">Profile</a>
-                <a href="" class="dropdown-item">Settings</a>
+                <a href="/profile" class="dropdown-item">Profile</a>
+                <a href="/settings" class="dropdown-item">Settings</a>
                 <a href="/logout" class="dropdown-item">Sign out</a>
             </div>
         </div>
@@ -57,9 +57,34 @@
 <div class="container mt-3">
 
     {% if user.is_authenticated %}
+    {# Display a badge to welcome the user (nonsense) #}
+
     <div class="alert alert-info" role="alert">
-      Welcome, {{ user.first_name }} {{ user.last_name }}!
+        <h4>
+            {% if user.first_name %}
+                {% if user.last_name %}
+                    Welcome, {{ user.first_name }} {{ user.last_name }}!
+                {% else %}
+                    Welcome, {{ user.first_name }}!
+                {% endif %}
+            {% else %}
+                {% if user.last_name %}
+                    Welcome, {{ user.last_name }}!
+                {% else %}
+                    Welcome, {{ user.username }}!
+                {% endif %}
+            {% endif %}
+        </h4>
+
+        <hr>
+
+        <h5>You can now post your lost or found.</h5>
+        <ul>
+          <li>Click "New Post" on the right-top corder to post a new lost / found.</li>
+          <li>Click on your name on the right-top corder to manage your accound.</li>
+        </ul>
     </div>
+
     {% endif %}
 
     <div class="input-group has-feedback">
@@ -163,10 +188,8 @@
                     <div class="col-4 col-md">{{ info.location }}</div>
                     <div class="col-4 col-md">{{ info.date|date:"Y-m-d" }}</div>
                     <div class="col-md hide-sm">{{ info.poster }}</div>
-                    <div class="col mt-1">
-                        <button class="btn btn-sm btn-secondary m-auto" onclick="show_detail({{ info.pid }})">View
-                            Detail
-                        </button>
+                    <div class="col">
+                        <a href="/detail/{{ info.pid }}"><button class="btn btn-sm btn-secondary m-auto">View Detail</button></a>
                     </div>
                 </div>
             </li>
