@@ -20,7 +20,9 @@ function changeIcon(obj) {
 
 function get_data(obj, type) {
     var data = [];
-    for (var i = 3; i < 6; i++) {
+
+    // Lost / Found (Dropdown 1)
+    for (var i = 0; i < 3; i++) {
         if ($('.dropdown-item')[i].className.indexOf("active") > 0) {
             if ($(obj).html() !== $('.dropdown-item')[i].innerHTML && type === 0) {
                 $('.dropdown-item')[i].className = "dropdown-item";
@@ -37,7 +39,9 @@ function get_data(obj, type) {
             }
         }
     }
-    for (i = 11; i < 14; i++) {
+
+    // Time (Dropdown 3)
+    for (i = 8; i < 11; i++) {
         if ($('.dropdown-item')[i].className.indexOf("active") > 0) {
             if ($(obj).html() !== $('.dropdown-item')[i].innerHTML && type === 1) {
                 $('.dropdown-item')[i].className = "dropdown-item";
@@ -54,6 +58,8 @@ function get_data(obj, type) {
             }
         }
     }
+
+    // Location (Dropdown 2)
     var checked = [];
     for (i = 0; i < 5; i++) {
         if ($(".locations")[i].checked) {
