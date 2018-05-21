@@ -20,65 +20,45 @@ function changeIcon(obj) {
 
 function get_data(obj, type) {
     var data = [];
+    if (type === 0) {
+        $("#all-status, #all-found, #all-lost").removeClass('active');
+    }
+    else if (type === 1) {
+        $("#all-time, #last-week, #last-month").removeClass('active');
+    }
+    $(obj).addClass('active');
 
     // Lost / Found (Dropdown 1)
-    for (var i = 0; i < 3; i++) {
-        if ($('.dropdown-item')[i].className.indexOf("active") > 0) {
-            if ($(obj).html() !== $('.dropdown-item')[i].innerHTML && type === 0) {
-                $('.dropdown-item')[i].className = "dropdown-item";
-                continue;
-            }
-            if ($('.dropdown-item')[i].innerHTML === 'All') {
-                data.push(['L', 'F']);
-            }
-            else {
-                if ($('.dropdown-item')[i].innerHTML === 'Lost')
-                    data.push(['L']);
-                else
-                    data.push(['F']);
-            }
-        }
+    if ($("#all-status").hasClass('active')) {
+        data.push(['L', 'F']);
+    }
+    if ($("#all-lost").hasClass('active')) {
+        data.push(['L'])
+    }
+    if ($("#all-found").hasClass('active')) {
+        data.push(['F'])
     }
 
     // Time (Dropdown 3)
-    for (i = 8; i < 11; i++) {
-        if ($('.dropdown-item')[i].className.indexOf("active") > 0) {
-            if ($(obj).html() !== $('.dropdown-item')[i].innerHTML && type === 1) {
-                $('.dropdown-item')[i].className = "dropdown-item";
-                continue;
-            }
-            if ($('.dropdown-item')[i].innerHTML === 'Last Week') {
-                data.push(0);
-            }
-            else if ($('.dropdown-item')[i].innerHTML === 'Last Month') {
-                data.push(1);
-            }
-            else {
-                data.push(2);
-            }
-        }
+    if ($("#last-week").hasClass('active')) {
+        data.push(0);
     }
-
-    // Location (Dropdown 2)
-    var checked = [];
-    for (i = 0; i < 5; i++) {
-        if ($(".locations")[i].checked) {
-            checked.push($(".locations")[i].value)
-        }
+    if ($("#last-month").hasClass('active')) {
+        data.push(1);
     }
-    data.push(checked);
+    if ($("#all-time").hasClass('active')) {
+        data.push(2);
+    }
+    $(obj).addClass('active');
     return data;
 }
 
 function searching(obj, type) {
-    if (obj.tagName === 'A')
-        $(obj).addClass("active");
     var data = get_data(obj, type);
     $.get("search", {
         key: $("#search").val(),
         status: '[' + data[0].toString() + ']',
-        date: data[1],
-        location: '[' + data[2].toString() + ']'
+        date: data[1]
     }, function (data) {
         printHTML(data);
     });
@@ -121,9 +101,4 @@ function printHTML(data) {
             '        </li>';
     }
     $("#mainTable").html(str);
-}
-
-function show_detail(num) {
-    console.log("/detail/" + num + "/");
-    window.location.href = "/detail/" + num + "/";
 }

@@ -17,7 +17,6 @@ class Post(models.Model):
     date = models.DateField(blank=True, null=True)
     name = models.TextField(blank=True, null=True)
     location = models.TextField(blank=True, null=True)
-    locationrange = models.CharField(max_length=1, blank=True, null=True)
     contact = models.TextField(blank=True, null=True)
 
     class Meta:

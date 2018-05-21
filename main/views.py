@@ -37,11 +37,8 @@ def search(request):
     result = []
     key = request.GET['key']
     date = request.GET['date']
-    location = request.GET['location']
     status = request.GET['status']
     data = Post.objects.filter(status__in=status).order_by("-date")
-    if len(location) > 2:
-        data = data.filter(locationrange__in=location)
     if len(key) > 0:
         data = data.filter(Q(name__icontains=key) | Q(location__icontains=key) | Q(poster__icontains=key))
     if int(date) == 0:
