@@ -59,3 +59,38 @@ def register(request):
 
 def profile(request):
     return render(request, 'profile.html')
+
+def new_post(request):
+    # Other information of post form
+    name = request.POST['objectName']
+    location = request.POST['location']
+    description = request.POST['description']
+    contact = request.POST['contact']
+    poster = request.user.username
+    date = datetime.now()
+    status = request.POST['status-type']
+
+    # Picture upload
+    img = request.FILES['photo']
+    filetype = img.content_type.split("/")[1]
+    if filetype == "jpeg":
+        filetype = "jpg"
+    filename = "%s@%s.%s" % (name, location, filetype)
+    path = "static/img/%s" % (filename)
+    with open(path, 'wb+') as destination:
+        for chunk in img.chunks():
+            destination.write(chunk)
+
+    # Insert into database
+    obj = Post(
+        poster=poster,
+        description=description,
+        status=status,
+        pic=filename,
+        date=date,
+        name=name,
+        location=location,
+        contact=contact
+    )
+    obj.save()
+    return HttpResponse("sucess")

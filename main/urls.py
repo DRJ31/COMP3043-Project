@@ -10,5 +10,6 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(next_page='/')),
     path('register/', views.register),
     path('profile/', views.profile),
-    path('settings/', views.profile) # TODO
+    path('settings/', views.profile), # TODO
+    path('newpost/', views.new_post),
 ]

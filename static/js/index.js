@@ -1,4 +1,10 @@
 $(document).ready(function () {
+    $("#post-detail").validate({
+        rules: {
+            objectName: "required",
+            location: "required"
+        }
+    });
     $("#read").click(function () {
         $("#new").addClass('d-none');
     });
@@ -6,6 +12,28 @@ $(document).ready(function () {
         $("#search").val("");
         searching($("#search"), 3);
         $("#icon").removeClass("fa-times").addClass("fa-search");
+    });
+    $("#photo").fileinput({
+        theme: "fas",
+        showUpload: false
+    });
+    $("#icon-close, #btn-close").click(function () {
+        $("#post").removeClass('d-none');
+        $("#post-detail")[0].reset();
+    });
+    $("#post").click(function () {
+        $("#post-detail").ajaxSubmit({
+            success: function () {
+                $("#post").addClass("d-none");
+                $("#alert-msg").addClass("alert-success").html("You have posted successfully!");
+            },
+            error: function () {
+                $("#alert-msg").addClass("alert-danger").html("Error, please try again.");
+            }
+        });
+    });
+    $("#close-msg, #close-modal").click(function () {
+        $("#alert-msg").removeClass("alert-success alert-danger").html("");
     });
 });
 
