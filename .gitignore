@@ -6,6 +6,8 @@
 lost_found/config.py
 *.jpg
 *.png
+username.txt
+crawler.py
 
 # Python Pre-compiled cache
 *.pyc
