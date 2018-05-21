@@ -189,9 +189,7 @@
                     <div class="col-4 col-md">{{ info.date|date:"Y-m-d" }}</div>
                     <div class="col-md hide-sm">{{ info.poster }}</div>
                     <div class="col">
-                        <button class="btn btn-sm btn-secondary m-auto" onclick="show_detail({{ info.pid }})">
-                          View Detail
-                        </button>
+                        <a href="/detail/{{ info.pid }}"><button class="btn btn-sm btn-secondary m-auto">View Detail</button></a>
                     </div>
                 </div>
             </li>
