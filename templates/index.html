@@ -57,9 +57,34 @@
 <div class="container mt-3">
 
     {% if user.is_authenticated %}
+    {# Display a badge to welcome the user (nonsense) #}
+
     <div class="alert alert-info" role="alert">
-      Welcome, {{ user.first_name }} {{ user.last_name }}!
+        <h4>
+            {% if user.first_name %}
+                {% if user.last_name %}
+                    Welcome, {{ user.first_name }} {{ user.last_name }}!
+                {% else %}
+                    Welcome, {{ user.first_name }}!
+                {% endif %}
+            {% else %}
+                {% if user.last_name %}
+                    Welcome, {{ user.last_name }}!
+                {% else %}
+                    Welcome, {{ user.username }}!
+                {% endif %}
+            {% endif %}
+        </h4>
+
+        <hr>
+
+        <h5>You can now post your lost or found.</h5>
+        <ul>
+          <li>Click "New Post" on the right-top corder to post a new lost / found.</li>
+          <li>Click on your name on the right-top corder to manage your accound.</li>
+        </ul>
     </div>
+
     {% endif %}
 
     <div class="input-group has-feedback">
