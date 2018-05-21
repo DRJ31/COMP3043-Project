@@ -15,36 +15,39 @@
     <script src="https://cdn.bootcss.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
-    <a class="navbar-brand" href="#">Lost &amp; Found</a>
+<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top d-flex justify-content-between">
+    <a class="navbar-brand justify-content-start" href="#">Lost &amp; Found</a>
+
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent"
             aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarContent">
-        <!--Left Navbar-->
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="#" data-toggle="modal" data-target="#bulletin">Bulletin <span
-                        class="badge badge-primary" id="new">New!</span></a>
-            </li>
-        </ul>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
         <!--Right Navbar-->
-        <button class="btn btn-outline-success my-2 my-sm-0 d-none">Login</button>
-        <button class="btn btn-primary ml-2 d-none">Sign Up</button>
+
+        {% if user.is_authenticated %}
+
         <div class="dropdown mr-4 mb-2">
-            <div class="btn dropdown-toggle" id="userMenu" data-toggle="dropdown" aria-haspopup="true"
-                 aria-expanded="false">
-                ECWU
+            <div class="dropdown-toggle" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ user.username }}
             </div>
             <div class="dropdown-menu clearfix" aria-describedby="userMenu">
                 <a href="" class="dropdown-item">Profile</a>
                 <a href="" class="dropdown-item">Settings</a>
-                <a href="" class="dropdown-item">Sign out</a>
+                <a href="/logout" class="dropdown-item">Sign out</a>
             </div>
         </div>
+
         <button class="btn btn-primary" data-toggle="modal" data-target="#newPost">New Post</button>
+
+        {% else %}
+
+        <a href="/login"><button class="btn btn-outline-success my-2 my-sm-0">Login</button></a>
+        <a href="/register"><button class="btn btn-primary ml-2">Sign Up</button></a>
+
+        {% endif %}
+
     </div>
 </nav>
 <div class="container mt-3">
