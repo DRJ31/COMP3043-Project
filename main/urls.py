@@ -13,5 +13,6 @@ urlpatterns = [
     path('settings/', views.profile), # TODO
     path('newpost/', views.new_post),
     re_path(r'^delete/(?P<id>[0-9A-Za-z_$\/+=]+)/$', views.delete_post),
-    path('update/<id>/', views.update_post)
+    path('update/<id>/', views.update_post),
+    path('allpost/', views.all_post)
 ]

@@ -14,13 +14,21 @@ import os
 
 def index(request):
     data = []
-    for info in Post.objects.filter(status__in=['L', 'F'], date__range=[datetime.now() - timedelta(days=7), datetime.now()]).order_by('-date'):
+    for info in Post.objects.filter(date__range=[datetime.now() - timedelta(days=7), datetime.now()]).order_by('-date'):
         data.append(info)
     return render(request, 'index.html', {
         'data': data,
         'length': len(data)
     })
 
+def all_post(request):
+    data = []
+    for info in Post.objects.filter(poster=request.user.username, date__range=[datetime.now() - timedelta(days=7), datetime.now()]).order_by('-date'):
+        data.append(info)
+    return render(request, 'allpost.html', {
+        'data': data,
+        'length': len(data)
+    })
 
 def show_detail(request, id):
     data = Post.objects.get(pid=id)

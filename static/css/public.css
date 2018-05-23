@@ -59,6 +59,20 @@ body {
     width: 100px;
 }
 
+.options .btn-info {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.options .btn-secondary {
+    border-radius: 0;
+}
+
+.options .btn-danger {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
 @media (max-width: 767px) {
     .hide-md {
         display: block;
@@ -74,6 +88,14 @@ body {
 
     .hide-sm {
         display: none;
+    }
+
+    .options {
+        margin-top: 10px;
+    }
+
+    .options .btn {
+        width: 90px;
     }
 }
 
