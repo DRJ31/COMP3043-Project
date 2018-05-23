@@ -81,3 +81,12 @@ function pageRefresh() { //Refresh the page in 3s
         location.reload();
     }, 3000);
 }
+
+function get_data(obj) {
+    var id = $(obj).parent().find('a')[0].href.split("/")[4];
+    $.post('/getkey/', {
+        id: id
+    }, function (data) {
+        $("#delete-link").attr('href', "/delete/" + data);
+    });
+}

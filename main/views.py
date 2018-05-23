@@ -12,7 +12,7 @@ import os
 # Create your views here.
 
 
-def index(request):
+def index(request): # Index page
     data = []
     for info in Post.objects.filter(date__range=[datetime.now() - timedelta(days=7), datetime.now()]).order_by('-date'):
         data.append(info)
@@ -21,7 +21,8 @@ def index(request):
         'length': len(data)
     })
 
-def all_post(request):
+
+def all_post(request): # Show all the post of user
     data = []
     for info in Post.objects.filter(poster=request.user.username, date__range=[datetime.now() - timedelta(days=7), datetime.now()]).order_by('-date'):
         data.append(info)
@@ -30,7 +31,8 @@ def all_post(request):
         'length': len(data)
     })
 
-def show_detail(request, id):
+
+def show_detail(request, id): # Detail page
     data = Post.objects.get(pid=id)
     encrypt = data.postencrypt.encrypt
     return render(request, 'detail.html', {
@@ -64,10 +66,12 @@ def search(request):
 def register(request):
     return render(request, 'register.html')
 
+
 def profile(request):
     return render(request, 'profile.html')
 
-def new_post(request):
+
+def new_post(request): # Insert new post to database
     # Other information of post form
     name = request.POST['objectName']
     location = request.POST['location']
@@ -110,7 +114,7 @@ def new_post(request):
     return HttpResponse("success")
 
 
-def delete_post(request, id):
+def delete_post(request, id): # Delete the chosen post
     encryptObj = PostEncrypt.objects.get(encrypt=id)
     name = encryptObj.id.poster
     user = request.user.username
@@ -123,8 +127,9 @@ def delete_post(request, id):
     Post.objects.get(pid=encryptObj.id.pid).delete()
     return render(request, 'validate.html', {
         'auth': True,
-        'path': '/'
+        'path': '/allpost'
     })
+
 
 def update_post(request, id):
     obj = Post.objects.get(pid=id)
@@ -157,3 +162,8 @@ def update_post(request, id):
         'path': '/detail/' + id
     })
 
+
+def get_key(request): # Get the delete key
+    pid = request.POST['id']
+    key = PostEncrypt.objects.get(id=pid).encrypt
+    return HttpResponse(key)
