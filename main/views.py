@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password, check_password
 from django.http import HttpResponse
 from django.db.models import Q
-from main.models import Post
+from main.models import Post, PostEncrypt
 from datetime import datetime, timedelta
 
 # Create your views here.
@@ -22,7 +23,11 @@ def index(request):
 
 def show_detail(request, id):
     data = Post.objects.get(pid=id)
-    return render(request, 'detail.html', {'data': data})
+    encrypt = data.postencrypt.encrypt
+    return render(request, 'detail.html', {
+        "data": data,
+        "encrypt": encrypt
+    })
 
 
 def lost_found(request, type):
@@ -70,19 +75,23 @@ def new_post(request):
     date = datetime.now()
     status = request.POST['status-type']
 
-    # Picture upload
-    img = request.FILES['photo']
-    filetype = img.content_type.split("/")[1]
-    if filetype == "jpeg":
-        filetype = "jpg"
-    filename = "%s@%s.%s" % (name, location, filetype)
-    path = "static/img/%s" % (filename)
-    with open(path, 'wb+') as destination:
-        for chunk in img.chunks():
-            destination.write(chunk)
-
+    if not request.POST.get('default'):
+        # Picture upload
+        img = request.FILES['photo']
+        filetype = img.content_type.split("/")[1]
+        if filetype == "jpeg":
+            filetype = "jpg"
+        filename = "%s-%s-%s.%s" % (name, poster, date.strftime("%Y-%m-%d"), filetype)
+        encryptString = filename
+        path = "static/img/%s" % (filename)
+        with open(path, 'wb+') as destination:
+            for chunk in img.chunks():
+                destination.write(chunk)
+    else:
+        filename = "saber.jpg"
+        encryptString = "%s-%s-%s" % (name, poster, date.strftime("%Y-%m-%d"))
     # Insert into database
-    obj = Post(
+    post_detail = Post(
         poster=poster,
         description=description,
         status=status,
@@ -92,5 +101,14 @@ def new_post(request):
         location=location,
         contact=contact
     )
-    obj.save()
-    return HttpResponse("sucess")
+    post_detail.save()
+    eid = Post.objects.get(pid=post_detail.pid)
+    encrypt = PostEncrypt(id=eid, encrypt=make_password(encryptString, "", 'pbkdf2_sha256'))
+    encrypt.save()
+    return HttpResponse("success")
+
+
+def delete_post(request, id):
+    pid = PostEncrypt.objects.get(encrypt=id).id
+    Post.objects.get(pid=pid).delete()
+    return HttpResponse("success")

@@ -24,10 +24,10 @@ class Post(models.Model):
         db_table = 'post'
 
 
-class Readed(models.Model):
-    uid = models.IntegerField(primary_key=True)
-    status = models.CharField(max_length=1)
+class PostEncrypt(models.Model):
+    id = models.OneToOneField(Post, primary_key=True, on_delete=models.CASCADE, db_column='id')
+    encrypt = models.CharField(max_length=128, blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'readed'
+        db_table = 'post_encrypt'

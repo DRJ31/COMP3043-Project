@@ -27,69 +27,155 @@
 
         {% if user.is_authenticated %}
 
-        <div class="dropdown mr-2">
-            <button class="btn btn-light dropdown-toggle" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {{ user.username }}
-            </button>
-            <div class="dropdown-menu clearfix" aria-describedby="userMenu">
-                <a href="/profile" class="dropdown-item">Profile</a>
-                <a href="/settings" class="dropdown-item">Settings</a>
-                <a href="/logout" class="dropdown-item">Sign out</a>
+            <div class="dropdown mr-5">
+                <button class="btn btn-light dropdown-toggle" id="userMenu" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                    {{ user.username }}
+                </button>
+                <div class="dropdown-menu clearfix" aria-describedby="userMenu">
+                    <a href="/profile" class="dropdown-item">Profile</a>
+                    <a href="/settings" class="dropdown-item">Settings</a>
+                    <a href="/logout" class="dropdown-item">Sign out</a>
+                </div>
             </div>
-        </div>
-
-        <button class="btn btn-primary" data-toggle="modal" data-target="#newPost">New Post</button>
 
         {% else %}
 
-        <a href="/login"><button class="btn btn-outline-success my-2 my-sm-0">Login</button></a>
-        <a href="/register"><button class="btn btn-primary ml-2">Sign Up</button></a>
+            <a href="/login">
+                <button class="btn btn-outline-success my-2 my-sm-0">Login</button>
+            </a>
+            <a href="/register">
+                <button class="btn btn-primary ml-2">Sign Up</button>
+            </a>
 
         {% endif %}
 
     </div>
 </nav>
 <div class="container container-phone">
-    <div class="row">
-        <div id="images" class="carousel slide col-lg-5 mb-3" data-ride="carousel">
-            <!--<ol class="carousel-indicators">
-                <li data-target="#images" data-slide-to="0" class="active"></li>
-                <li data-target="#images" data-slide-to="1"></li>
-            </ol>-->
+    <div class="row ml-0" style="width: 100%">
+        <div id="images" class="carousel slide col-lg-6 mb-3 p-0" data-ride="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <img class="d-block w-100" src="/static/img/{{ data.pic }}" alt="First slide">
                 </div>
-                <!--<a class="carousel-control-prev" href="#images" role="button" data-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Previous</span>
-                </a>
-                <a class="carousel-control-next" href="#images" role="button" data-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
-                </a>-->
             </div>
         </div>
-        <div class="col-lg-6 ml-4">
+        <div class="col-lg-5 ml-4">
             <h2>
                 {{ data.name }}
-                {%  if data.status == 'F' %}
-                <span class="badge badge-info">Found</span>
+                {% if data.status == 'F' %}
+                    <span class="badge badge-info">Found</span>
                 {% else %}
-                <span class="badge badge-warning">Lost</span>
+                    <span class="badge badge-warning">Lost</span>
                 {% endif %}
             </h2>
             <p><i class="fas fa-location-arrow"></i> {{ data.location }}</p>
             <p><i class="fas fa-calendar-alt"></i> {{ data.date }}</p>
             <p><i class="fas fa-address-book"></i> {{ data.contact }}</p>
             <p><i class="fas fa-address-card"> {{ data.poster }}</i></p>
+            <div class="d-flex justify-content-start">
+                <button class="btn btn-secondary hide-sm btn-manage m-2">Edit</button>
+                <button class="btn btn-danger hide-sm btn-manage m-2">Delete</button>
+            </div>
         </div>
     </div>
-    <div class="jumbotron jumbotron-width p-3">
+    <div class="jumbotron p-4 mb-0" style="width: 100%">
         <h4>Detail</h4>
         <p>{{ data.description }}</p>
     </div>
+    {% if data.poster == user.username %}
 
+        <div class="container">
+            <div class="row">
+                <button class="btn btn-secondary col-lg-12 col-md-7 hide-md ml-auto mr-auto">Edit</button>
+                <button class="btn btn-danger col-lg-12 col-md-7 hide-md ml-auto mr-auto">Delete</button>
+            </div>
+
+        </div>
+        <!--Modal-->
+
+        <!--New Post-->
+        <div class="modal fade" id="newPost" tabindex="-1" role="dialog" aria-labelledby="newPost" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content long-modal">
+                    <div class="modal-header">
+                        <h5 class="modal-title">New Post</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="icon-close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="overflow-y: auto">
+                        <form action="/newpost/" id="post-detail" method="post" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="objectName">Name</label>
+                                <input type="text" class="form-control" name="objectName" id="objectName"
+                                       aria-describedby="nameHelp" required>
+                                <small id="nameHelp" class="form-text text-muted">Name of lost or found object.</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="status-type">Type</label>
+                                <select name="status-type" id="status-type" class="form-control">
+                                    <option value="L">Lost</option>
+                                    <option value="F">Found</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="objectName">Location</label>
+                                <input type="text" class="form-control" name="location" id="location"
+                                       aria-describedby="locationHelp" required>
+                                <small id="locationHelp" class="form-text text-muted">e.g. T8, V27 Lobby</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea class="form-control" id="description" rows="3" name="description"
+                                          placeholder="Write your description of the object" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact">Contacts</label>
+                                <textarea class="form-control" id="contact" rows="3" name="contact"
+                                          placeholder="Write whatever ways you want others to contact you"
+                                          required></textarea>
+                            </div>
+                            <label for="photo">Photo</label>
+                            <div class="file-loading">
+                                <input id="photo" name="photo" type="file" class="projectfile" required>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btn-close">Close
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="post" data-toggle="modal"
+                                data-target="#alert-msg-modal">Post
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert Modal -->
+        <div class="modal fade" id="alert-msg-modal" tabindex="-1" role="dialog" aria-labelledby="alert-msg-label"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="alert-msg-label">Message</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close-modal">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert" id="alert-msg"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="close-msg">Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 </div>
 </body>
 </html>

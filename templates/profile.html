@@ -28,23 +28,28 @@
 
         {% if user.is_authenticated %}
 
-        <div class="dropdown mr-2">
-            <button class="btn btn-light dropdown-toggle" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {{ user.username }}
-            </button>
-            <div class="dropdown-menu clearfix" aria-describedby="userMenu">
-                <a href="/profile" class="dropdown-item">Profile</a>
-                <a href="/settings" class="dropdown-item">Settings</a>
-                <a href="/logout" class="dropdown-item">Sign out</a>
+            <div class="dropdown mr-2">
+                <button class="btn btn-light dropdown-toggle" id="userMenu" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                    {{ user.username }}
+                </button>
+                <div class="dropdown-menu clearfix" aria-describedby="userMenu">
+                    <a href="/profile" class="dropdown-item">Profile</a>
+                    <a href="/settings" class="dropdown-item">Settings</a>
+                    <a href="/logout" class="dropdown-item">Sign out</a>
+                </div>
             </div>
-        </div>
 
-        <button class="btn btn-primary" data-toggle="modal" data-target="#newPost">New Post</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#newPost">New Post</button>
 
         {% else %}
 
-        <a href="/login"><button class="btn btn-outline-success my-2 my-sm-0">Login</button></a>
-        <a href="/register"><button class="btn btn-primary ml-2">Sign Up</button></a>
+            <a href="/login">
+                <button class="btn btn-outline-success my-2 my-sm-0">Login</button>
+            </a>
+            <a href="/register">
+                <button class="btn btn-primary ml-2">Sign Up</button>
+            </a>
 
         {% endif %}
 
@@ -53,52 +58,52 @@
 
 {% if user.is_authenticated %}
 
-<div class="container mt-3">
-    <div class="row">
-        <div class="col-md-3 mb-3">
-            <div class="list-group">
-                <a href="#" class="list-group-item list-group-item-action">Profile</a>
-                <a href="#" class="list-group-item list-group-item-action active">Settings</a>
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action">Profile</a>
+                    <a href="#" class="list-group-item list-group-item-action active">Settings</a>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <h2>Change Password</h2>
+                <form action="">
+                    <div class="form-group">
+                        <label for="oldPass">Old Password</label>
+                        <input type="password" class="form-control" id="oldPass">
+                    </div>
+                    <div class="form-group">
+                        <label for="newPass">New Password</label>
+                        <input type="password" class="form-control" id="newPass">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPass">Confirm New Password</label>
+                        <input type="password" class="form-control" id="confirmPass">
+                    </div>
+                    <button class="btn btn-primary" type="submit">Change Password</button>
+                    <div class="form-group">
+
+                    </div>
+                </form>
             </div>
         </div>
-        <div class="col-md-9">
-            <h2>Change Password</h2>
-            <form action="">
-                <div class="form-group">
-                    <label for="oldPass">Old Password</label>
-                    <input type="password" class="form-control" id="oldPass">
-                </div>
-                <div class="form-group">
-                    <label for="newPass">New Password</label>
-                    <input type="password" class="form-control" id="newPass">
-                </div>
-                <div class="form-group">
-                    <label for="confirmPass">Confirm New Password</label>
-                    <input type="password" class="form-control" id="confirmPass">
-                </div>
-                <button class="btn btn-primary" type="submit">Change Password</button>
-                <div class="form-group">
-
-                </div>
-            </form>
-        </div>
     </div>
-</div>
 
 {% else %}
+    <div class="container mt-3">
+        <div class="alert alert-danger" role="alert">
+            <h4>You are not permitted to visit this page.</h4>
 
-<div class="alert alert-info" role="alert">
-    <h4>You are not permitted to visit this page.</h4>
+            <hr>
 
-    <hr>
-
-    <h5>You are not logged in.</h5>
-    <ul>
-      <li>If you have an account, click "Login" on the right-top corner.</li>
-      <li>If you do not have an account, click "Sign Up" on the right-top corner.</li>
-    </ul>
-</div>
-
+            <h5>You are not logged in.</h5>
+            <ul>
+                <li>If you have an account, click "Login" on the right-top corner.</li>
+                <li>If you do not have an account, click "Sign Up" on the right-top corner.</li>
+            </ul>
+        </div>
+    </div>
 {% endif %}
 
 </body>

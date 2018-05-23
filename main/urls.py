@@ -12,4 +12,5 @@ urlpatterns = [
     path('profile/', views.profile),
     path('settings/', views.profile), # TODO
     path('newpost/', views.new_post),
+    path('delete/<id>', views.delete_post)
 ]
