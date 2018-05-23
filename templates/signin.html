@@ -25,43 +25,53 @@
 
     <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
         <!--Right Navbar-->
-        <a href="/register"><button class="btn btn-primary my-2 my-sm-0" type="submit">Sign Up</button></a>
+        <a href="/register">
+            <button class="btn btn-primary my-2 my-sm-0" type="submit">Sign Up</button>
+        </a>
     </div>
 </nav>
 
 {% if form.errors %}
-<div class="alert alert-danger" role="alert">
-  Authentication failed, please try again.
-  <br>
-  {{ user.username }} / {{ user.password }}
-</div>
+
+    <div class="container mt-3">
+        <div class="alert alert-danger" role="alert">
+            Authentication failed, please try again.
+            <br>
+            {{ user.username }} / {{ user.password }}
+        </div>
+    </div>
+
 {% endif %}
 
 {% if user.is_authenticated %}
-<div class="alert alert-info" role="alert">
-  {{ user.username }}, You are already signed in!
-</div>
+    <div class="container mt-3">
+        <div class="alert alert-info" role="alert">
+            {{ user.username }}, You are already signed in!
+        </div>
+    </div>
 {% else %}
 
-<form action="" method="post" class="form-signin">
-    {% csrf_token %}
-    <h1 class="mb-3 h3">UIC Lost &amp; Found</h1>
-    <label for="email" class="sr-only">Email or username</label>
-    <input type="text" id="email" name="username" class="form-control input-top" placeholder="Email or username" required
-           autofocus>
-    <label for="password" class="sr-only">Password</label>
-    <input type="password" id="password" name="password" class="form-control mb-3 input-bottom" placeholder="Password"
-           required autofocus>
-    <div class="mb-1">
-        <label class="mr-3">
-            <input type="checkbox">
-            Remember me
-        </label>
-        <a href="">Forget password</a>
-    </div>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
-    <button class="btn btn-lg btn-block btn-secondary">Sign Up</button>
-</form>
+    <form action="" method="post" class="form-signin">
+        {% csrf_token %}
+        <h1 class="mb-3 h3">UIC Lost &amp; Found</h1>
+        <label for="email" class="sr-only">Email or username</label>
+        <input type="text" id="email" name="username" class="form-control input-top" placeholder="Email or username"
+               required
+               autofocus>
+        <label for="password" class="sr-only">Password</label>
+        <input type="password" id="password" name="password" class="form-control mb-3 input-bottom"
+               placeholder="Password"
+               required autofocus>
+        <div class="mb-1">
+            <label class="mr-3">
+                <input type="checkbox">
+                Remember me
+            </label>
+            <a href="">Forget password</a>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+        <button class="btn btn-lg btn-block btn-secondary">Sign Up</button>
+    </form>
 {% endif %}
 
 </body>
