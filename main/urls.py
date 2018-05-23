@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from django.contrib.auth import views as auth_views
 from . import views
 
@@ -12,5 +12,6 @@ urlpatterns = [
     path('profile/', views.profile),
     path('settings/', views.profile), # TODO
     path('newpost/', views.new_post),
-    path('delete/<id>', views.delete_post)
+    re_path(r'^delete/(?P<id>[0-9A-Za-z_$\/+=]+)/$', views.delete_post),
+    path('update/<id>/', views.update_post)
 ]

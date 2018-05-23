@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.db.models import Q
 from main.models import Post, PostEncrypt
 from datetime import datetime, timedelta
+import os
 
 # Create your views here.
 
@@ -26,16 +27,9 @@ def show_detail(request, id):
     encrypt = data.postencrypt.encrypt
     return render(request, 'detail.html', {
         "data": data,
-        "encrypt": encrypt
+        "encrypt": encrypt,
+        "ID": id
     })
-
-
-def lost_found(request, type):
-    status = 'L' if type == 'lost' else 'F'
-    data = []
-    for info in Post.objects.get(status='L'):
-        data.append(info)
-    return render(request, 'index.html', {})
 
 
 def search(request):
@@ -88,7 +82,7 @@ def new_post(request):
             for chunk in img.chunks():
                 destination.write(chunk)
     else:
-        filename = "saber.jpg"
+        filename = "default.jpg"
         encryptString = "%s-%s-%s" % (name, poster, date.strftime("%Y-%m-%d"))
     # Insert into database
     post_detail = Post(
@@ -109,6 +103,49 @@ def new_post(request):
 
 
 def delete_post(request, id):
-    pid = PostEncrypt.objects.get(encrypt=id).id
-    Post.objects.get(pid=pid).delete()
-    return HttpResponse("success")
+    encryptObj = PostEncrypt.objects.get(encrypt=id)
+    name = encryptObj.id.poster
+    user = request.user.username
+    if name != user:
+        return render(request, 'validate.html', {
+            'auth': False
+        })
+    if encryptObj.id.pic != "default.jpg":
+        os.remove('static/img/%s' % (encryptObj.id.pic))
+    Post.objects.get(pid=encryptObj.id.pid).delete()
+    return render(request, 'validate.html', {
+        'auth': True,
+        'path': '/'
+    })
+
+def update_post(request, id):
+    obj = Post.objects.get(pid=id)
+    # Other information of post form
+    name = request.POST['objectName']
+    obj.name = name
+    obj.location = request.POST['location']
+    obj.description = request.POST['description']
+    obj.contact = request.POST['contact']
+    poster = request.user.username
+    date = datetime.now()
+    oldFile = obj.pic
+    if not request.POST.get('default'):
+        # Picture upload
+        img = request.FILES['photo']
+        filetype = img.content_type.split("/")[1]
+        if filetype == "jpeg":
+            filetype = "jpg"
+        filename = "%s-%s-%s.%s" % (name, poster, date.strftime("%Y-%m-%d"), filetype)
+        os.remove('static/img/%s' % (oldFile))
+        path = "static/img/%s" % (filename)
+        with open(path, 'wb+') as destination:
+            for chunk in img.chunks():
+                destination.write(chunk)
+        obj.pic = filename
+
+    obj.save()
+    return render(request, "validate.html", {
+        'auth': True,
+        'path': '/detail/' + id
+    })
+

@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,9 +11,23 @@
           integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
     <link rel="stylesheet" href="/static/css/public.css">
     <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/detail.js"></script>
+    <link href="https://cdn.bootcss.com/bootstrap-fileinput/4.4.8/css/fileinput.min.css" media="all" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/bootstrap-fileinput/4.4.8/js/fileinput.min.js"></script>
+    <!-- optionally if you need a theme like font awesome theme you can include it as mentioned below -->
+    <script src="{% static 'js/theme.js' %}"></script>
+    <!-- optionally if you need translation for your language then include  locale file as mentioned below -->
+    <script src="https://cdn.bootcss.com/bootstrap-fileinput/4.4.8/js/locales/zh.js"></script>
     <!--<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>-->
     <script src="https://cdn.bootcss.com/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery.form/4.2.2/jquery.form.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script>
+        //csrf_token
+        $.ajaxSetup({
+            headers: {"X-CSRFToken": '{{ csrf_token }}'}
+        });
+    </script>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top d-flex justify-content-between">
     <a class="navbar-brand justify-content-start" href="/">Lost &amp; Found</a>
@@ -74,10 +89,16 @@
             <p><i class="fas fa-calendar-alt"></i> {{ data.date }}</p>
             <p><i class="fas fa-address-book"></i> {{ data.contact }}</p>
             <p><i class="fas fa-address-card"> {{ data.poster }}</i></p>
-            <div class="d-flex justify-content-start">
-                <button class="btn btn-secondary hide-sm btn-manage m-2">Edit</button>
-                <button class="btn btn-danger hide-sm btn-manage m-2">Delete</button>
-            </div>
+            {% if data.poster == user.username %}
+                <div class="d-flex justify-content-start">
+                    <button class="btn btn-secondary hide-sm btn-manage m-2" data-toggle="modal"
+                            data-target="#editPost">Edit
+                    </button>
+                    <button class="btn btn-danger hide-sm btn-manage m-2" data-toggle="modal"
+                            data-target="#confirm-delete-modal">Delete
+                    </button>
+                </div>
+            {% endif %}
         </div>
     </div>
     <div class="jumbotron p-4 mb-0" style="width: 100%">
@@ -88,67 +109,93 @@
 
         <div class="container">
             <div class="row">
-                <button class="btn btn-secondary col-lg-12 col-md-7 hide-md ml-auto mr-auto">Edit</button>
-                <button class="btn btn-danger col-lg-12 col-md-7 hide-md ml-auto mr-auto">Delete</button>
+                <button class="btn btn-secondary col-lg-12 col-md-7 hide-md ml-auto mr-auto" data-toggle="modal"
+                        data-target="#editPost">Edit
+                </button>
+                <button class="btn btn-danger col-lg-12 col-md-7 hide-md ml-auto mr-auto" data-toggle="modal"
+                        data-target="#confirm-delete-modal">Delete
+                </button>
             </div>
 
         </div>
         <!--Modal-->
 
         <!--New Post-->
-        <div class="modal fade" id="newPost" tabindex="-1" role="dialog" aria-labelledby="newPost" aria-hidden="true">
+        <div class="modal fade" id="editPost" tabindex="-1" role="dialog" aria-labelledby="newPost" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content long-modal">
                     <div class="modal-header">
                         <h5 class="modal-title">New Post</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="icon-close">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body" style="overflow-y: auto">
-                        <form action="/newpost/" id="post-detail" method="post" enctype="multipart/form-data">
+                        <form action="/update/{{ ID }}/" id="post-detail" method="post" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label for="objectName">Name</label>
                                 <input type="text" class="form-control" name="objectName" id="objectName"
-                                       aria-describedby="nameHelp" required>
+                                       aria-describedby="nameHelp" required value="{{ data.name }}">
                                 <small id="nameHelp" class="form-text text-muted">Name of lost or found object.</small>
-                            </div>
-                            <div class="form-group">
-                                <label for="status-type">Type</label>
-                                <select name="status-type" id="status-type" class="form-control">
-                                    <option value="L">Lost</option>
-                                    <option value="F">Found</option>
-                                </select>
                             </div>
                             <div class="form-group">
                                 <label for="objectName">Location</label>
                                 <input type="text" class="form-control" name="location" id="location"
-                                       aria-describedby="locationHelp" required>
+                                       aria-describedby="locationHelp" required value="{{ data.location }}">
                                 <small id="locationHelp" class="form-text text-muted">e.g. T8, V27 Lobby</small>
                             </div>
                             <div class="form-group">
                                 <label for="description">Description</label>
                                 <textarea class="form-control" id="description" rows="3" name="description"
-                                          placeholder="Write your description of the object" required></textarea>
+                                          placeholder="Write your description of the object"
+                                          required>{{ data.description }}</textarea>
                             </div>
                             <div class="form-group">
                                 <label for="contact">Contacts</label>
                                 <textarea class="form-control" id="contact" rows="3" name="contact"
                                           placeholder="Write whatever ways you want others to contact you"
-                                          required></textarea>
+                                          required>{{ data.contact }}</textarea>
                             </div>
                             <label for="photo">Photo</label>
                             <div class="file-loading">
                                 <input id="photo" name="photo" type="file" class="projectfile" required>
                             </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="default" id="origin-photo"
+                                       name="default">
+                                <label class="form-check-label" for="default-photo">
+                                    Use origin photo
+                                </label>
+                            </div>
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btn-close">Close
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
                         </button>
                         <button type="submit" class="btn btn-primary" id="post" data-toggle="modal"
-                                data-target="#alert-msg-modal">Post
+                                data-target="#alert-msg-modal">Update
                         </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Confirm Delete Modal -->
+        <div class="modal fade" id="confirm-delete-modal" tabindex="-1" role="dialog"
+             aria-labelledby="confirm-delete-label"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Message</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert">Are you sure you want to delete?</div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel
+                        </button>
+                        <a href="/delete/{{ encrypt }}" class="btn btn-danger">Delete</a>
                     </div>
                 </div>
             </div>
@@ -160,10 +207,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="alert-msg-label">Message</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close-modal">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <h5 class="modal-title">Message</h5>
                     </div>
                     <div class="modal-body">
                         <div class="alert" id="alert-msg"></div>
@@ -171,6 +215,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal" id="close-msg">Close
                         </button>
+                        <button class="btn btn-primary d-none" id="refresh">Refresh</button>
                     </div>
                 </div>
             </div>

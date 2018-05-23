@@ -1,13 +1,4 @@
 $(document).ready(function () {
-    $("#post-detail").validate({
-        rules: {
-            objectName: "required",
-            location: "required"
-        }
-    });
-    $("#read").click(function () {
-        $("#new").addClass('d-none');
-    });
     $("#clear").click(function () {
         $("#search").val("");
         searching($("#search"), 3);
@@ -18,7 +9,6 @@ $(document).ready(function () {
         showUpload: false
     });
     $("#icon-close, #btn-close").click(function () {
-        $("#post").removeClass('d-none');
         $("#post-detail")[0].reset();
     });
     $("#post").click(function () {
@@ -38,7 +28,7 @@ $(document).ready(function () {
             }
         });
     });
-    $("#close-msg, #close-modal").click(function () {
+    $("#close-msg").click(function () {
         $("#alert-msg").removeClass("alert-success alert-danger").html("");
     });
     $("#refresh").click(function () {
@@ -185,8 +175,8 @@ function checkForm() {
 }
 
 function pageRefresh() { //Refresh the page in 3s
-    $("#alert-msg").html("You have successfully post! The page will refresh in 3 second(s).");
+    $("#alert-msg").html("You have successfully post! The page will refresh in 3 seconds.");
     setTimeout(function () {
         location.reload();
-    }, 4000);
+    }, 3000);
 }
