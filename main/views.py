@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password, check_password
 from django.http import HttpResponse
 from django.db.models import Q
-from main.models import Post, PostEncrypt
+from main.models import Post, PostEncrypt, AuthUser
 from datetime import datetime, timedelta
 import os
 
@@ -70,6 +70,9 @@ def register(request):
 def profile(request):
     return render(request, 'profile.html')
 
+def settings(request):
+    return render(request, 'settings.html')
+
 
 def new_post(request): # Insert new post to database
     # Other information of post form
@@ -127,7 +130,8 @@ def delete_post(request, id): # Delete the chosen post
     Post.objects.get(pid=encryptObj.id.pid).delete()
     return render(request, 'validate.html', {
         'auth': True,
-        'path': '/allpost'
+        'path': '/allpost',
+        'msg': 'You have deleted your post'
     })
 
 
@@ -159,7 +163,8 @@ def update_post(request, id):
     obj.save()
     return render(request, "validate.html", {
         'auth': True,
-        'path': '/detail/' + id
+        'path': '/detail/' + id,
+        'msg': 'You have updated your post'
     })
 
 
@@ -184,3 +189,39 @@ class EmailAuthBackend(object): # Allow User to login by email
             return User.objects.get(pk=user_id)
         except User.DoesNotExist:
             return None
+
+
+def change_nickname(request):
+    nickname = request.POST['nickname']
+    if request.user.is_authenticated:
+        user = AuthUser.objects.get(username=request.user.username)
+        user.first_name = nickname
+        user.save()
+        return render(request, 'validate.html', {
+            'auth': True,
+            'path': '/profile',
+            'msg': 'You have modified your nickname into %s' % (nickname)
+        })
+    return render(request, 'validate.html', {
+        'auth': False
+    })
+
+
+def change_pass(request):
+    old = request.POST['old']
+    new = request.POST['new']
+    if request.user.check_password(old):
+        request.user.set_password(new)
+        request.user.save()
+        return render(request, "validate.html", {
+            'auth': True,
+            'path': '/',
+            'msg': "You have changed your password"
+        })
+    return render(request, "validate.html", {
+        'auth': True,
+        'wrong_pass': True,
+        'path': '/settings',
+        'msg': "Wrong password! Please try again."
+    })
+
