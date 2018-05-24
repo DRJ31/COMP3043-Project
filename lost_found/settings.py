@@ -131,3 +131,8 @@ STATICFILES_DIRS = [
 # User management settings
 LOGIN_REDIRECT_URL  = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+
+# Session settings
+SESSION_COOKIE_AGE = 60 * 60
+SESSION_SAVE_EVERY_REQUEST = True
