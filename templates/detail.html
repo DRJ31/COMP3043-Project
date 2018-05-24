@@ -45,7 +45,11 @@
             <div class="dropdown mr-5">
                 <button class="btn btn-light dropdown-toggle" id="userMenu" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false">
-                    {{ user.username }}
+                    {% if user.first_name %}
+                        {{ user.first_name }}
+                    {% else %}
+                        {{ user.username }}
+                    {% endif %}
                 </button>
                 <div class="dropdown-menu clearfix" aria-describedby="userMenu">
                     <a href="/allpost" class="dropdown-item">My Posts</a>

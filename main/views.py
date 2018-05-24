@@ -167,3 +167,20 @@ def get_key(request): # Get the delete key
     pid = request.POST['id']
     key = PostEncrypt.objects.get(id=pid).encrypt
     return HttpResponse(key)
+
+
+class EmailAuthBackend(object): # Allow User to login by email
+    def authenticate(self, username=None, password=None):
+        try:
+            user = User.objects.get(email=username)
+            if user.check_password(password):
+                return user
+            return None
+        except User.DoesNotExist:
+            return None
+
+    def get_user(self, user_id):
+        try:
+            return User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return None

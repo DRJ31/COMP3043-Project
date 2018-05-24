@@ -25,12 +25,12 @@
 
     {% if not user.is_authenticated %}
 
-    <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
-        <!--Right Navbar-->
-        <a href="/register">
-            <button class="btn btn-primary my-2 my-sm-0" type="submit">Sign Up</button>
-        </a>
-    </div>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
+            <!--Right Navbar-->
+            <a href="/register">
+                <button class="btn btn-primary my-2 my-sm-0" type="submit">Sign Up</button>
+            </a>
+        </div>
 
     {% endif %}
 </nav>
@@ -48,7 +48,11 @@
 {% if user.is_authenticated %}
     <div class="container mt-3">
         <div class="alert alert-info" role="alert">
-            {{ user.username }}, You are already signed in!
+            {% if user.first_name %}
+                {{ user.first_name }}
+            {% else %}
+                {{ user.username }}
+            {% endif %}, You are already signed in!
         </div>
     </div>
 {% else %}
