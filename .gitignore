@@ -1,5 +1,6 @@
 # Folders
 .idea/
+/static/img/
 
 #Files
 .DS_Store
