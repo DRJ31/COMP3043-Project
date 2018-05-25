@@ -24,7 +24,10 @@ def index(request): # Index page
 
 def all_post(request): # Show all the post of user
     data = []
-    for info in Post.objects.filter(poster=request.user.username, date__range=[datetime.now() - timedelta(days=7), datetime.now()]).order_by('-date'):
+    all = Post.objects.filter(date__range=[datetime.now() - timedelta(days=7), datetime.now()]).order_by('-date')
+    if request.user.is_staff == 0:
+        all.filter(poster=request.user.username)
+    for info in all:
         data.append(info)
     return render(request, 'allpost.html', {
         'data': data,
@@ -143,11 +146,11 @@ def delete_post(request, id): # Delete the chosen post
     encryptObj = PostEncrypt.objects.get(encrypt=id)
     name = encryptObj.id.poster
     user = request.user.username
-    if name != user:
+    if name != user and request.user.is_staff == 0:
         return render(request, 'validate.html', {
             'auth': False
         })
-    if encryptObj.id.pic != "default.jpg":
+    if encryptObj.id.pic != "default.jpg" and os.path.isfile('static/img/%s' % (encryptObj.id.pic)):
         os.remove('static/img/%s' % (encryptObj.id.pic))
     Post.objects.get(pid=encryptObj.id.pid).delete()
     return render(request, 'validate.html', {
@@ -165,7 +168,7 @@ def update_post(request, id):
     obj.location = request.POST['location']
     obj.description = request.POST['description']
     obj.contact = request.POST['contact']
-    poster = request.user.username
+    poster = obj.poster
     date = datetime.now()
     oldFile = obj.pic
     if not request.POST.get('default'):
