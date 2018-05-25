@@ -94,7 +94,7 @@
             <p><i class="fas fa-calendar-alt"></i> {{ data.date }}</p>
             <p><i class="fas fa-address-book"></i> {{ data.contact }}</p>
             <p><i class="fas fa-address-card"> {{ data.poster }}</i></p>
-            {% if data.poster == user.username %}
+            {% if data.poster == user.username or user.is_staff == 1 %}
                 <div class="d-flex justify-content-start">
                     <button class="btn btn-secondary hide-sm btn-manage m-2" data-toggle="modal"
                             data-target="#editPost">Edit
@@ -110,7 +110,7 @@
         <h4>Detail</h4>
         <p>{{ data.description }}</p>
     </div>
-    {% if data.poster == user.username %}
+    {% if data.poster == user.username or user.is_staff == 1 %}
 
         <div class="container">
             <div class="row">
