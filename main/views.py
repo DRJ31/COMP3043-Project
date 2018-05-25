@@ -26,7 +26,7 @@ def all_post(request): # Show all the post of user
     data = []
     all = Post.objects.filter(date__range=[datetime.now() - timedelta(days=7), datetime.now()]).order_by('-date')
     if request.user.is_staff == 0:
-        all.filter(poster=request.user.username)
+        all = all.filter(poster=request.user.username)
     for info in all:
         data.append(info)
     return render(request, 'allpost.html', {
