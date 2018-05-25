@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password, check_password
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import Q
 from main.models import Post, PostEncrypt, AuthUser
 from datetime import datetime, timedelta
@@ -64,8 +64,30 @@ def search(request):
 
 
 def register(request):
-    return render(request, 'register.html')
+    if request.method == 'GET':
+        return render(request, 'register.html')
+    elif request.method == 'POST':
+        username = request.POST["username"]
+        first_name = request.POST["firstname"]
+        last_name = request.POST["lastname"]
+        password = request.POST["password"]
+        email = request.POST["email"]
 
+        user = User(
+            username=username,
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            is_staff=False,
+            is_superuser=False
+        )
+
+        user.set_password(password) # Take care of hashing
+        user.save()
+
+        # Jump to Login View then
+        # TODO: Prompt
+        return HttpResponseRedirect('/login/')
 
 def profile(request):
     return render(request, 'profile.html')
