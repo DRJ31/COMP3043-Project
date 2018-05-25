@@ -16,6 +16,6 @@ urlpatterns = [
     path('update/<id>/', views.update_post),
     path('allpost/', views.all_post),
     path('getkey/', views.get_key),
-    path('changenickname/', views.change_nickname),
+    path('changeprofile/', views.change_profile),
     path('changepassword/', views.change_pass)
 ]

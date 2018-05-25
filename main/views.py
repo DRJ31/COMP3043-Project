@@ -213,16 +213,18 @@ class EmailAuthBackend(object): # Allow User to login by email
             return None
 
 
-def change_nickname(request):
-    nickname = request.POST['nickname']
+def change_profile(request):
+    firstname = request.POST['firstname']
+    lastname = request.POST['lastname']
     if request.user.is_authenticated:
         user = AuthUser.objects.get(username=request.user.username)
-        user.first_name = nickname
+        user.first_name = firstname
+        user.last_name = lastname
         user.save()
         return render(request, 'validate.html', {
             'auth': True,
             'path': '/profile',
-            'msg': 'You have modified your nickname into %s' % (nickname)
+            'msg': 'You have modified your nickname into %s %s' % (firstname, lastname)
         })
     return render(request, 'validate.html', {
         'auth': False

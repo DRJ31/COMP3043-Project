@@ -64,14 +64,18 @@
 {% if user.is_authenticated %}
 
     <div class="container mt-3">
-        <form action="/changenickname/" method="post">
+        <form action="/changeprofile/" method="post">
             {% csrf_token %}
-            <h2>Change Nickname</h2>
+            <h2>Change Profile</h2>
             <div class="form-group">
-                <label for="nickname">Nickname</label>
-                <input type="text" class="form-control" value="{{ user.first_name }}" id="nickname" name="nickname">
+                <label for="firstname">First Name</label>
+                <input type="text" class="form-control" value="{{ user.first_name }}" id="firstname" name="firstname">
             </div>
-            <button class="btn btn-primary" type="submit">Change Nickname</button>
+            <div class="form-group">
+                <label for="lastname">Last Name</label>
+                <input type="text" class="form-control" value="{{ user.last_name }}" id="lastname" name="lastname">
+            </div>
+            <button class="btn btn-primary" type="submit">Change Profile</button>
         </form>
     </div>
 
