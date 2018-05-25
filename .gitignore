@@ -8,6 +8,8 @@ lost_found/config.py
 *.png
 username.txt
 crawler.py
+*.pid
+*.ini
 
 # Python Pre-compiled cache
 *.pyc
