@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password, check_password
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.db.models import Q
 from main.models import Post, PostEncrypt, AuthUser
 from datetime import datetime, timedelta
@@ -36,7 +36,10 @@ def all_post(request): # Show all the post of user
 
 
 def show_detail(request, id): # Detail page
-    data = Post.objects.get(pid=id)
+    try:
+        data = Post.objects.get(pid=id)
+    except:
+        raise Http404
     encrypt = data.postencrypt.encrypt
     return render(request, 'detail.html', {
         "data": data,
