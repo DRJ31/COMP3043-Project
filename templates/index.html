@@ -1,0 +1,282 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Lost &amp; Found</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <!--<link href="https://cdn.bootcss.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet">-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css"
+          integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/css/public.css">
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <link href="https://cdn.bootcss.com/bootstrap-fileinput/4.4.8/css/fileinput.min.css" media="all" rel="stylesheet"
+          type="text/css"/>
+    <!--<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>-->
+    <script src="https://cdn.bootcss.com/bootstrap-fileinput/4.4.8/js/fileinput.min.js"></script>
+    <!-- optionally if you need a theme like font awesome theme you can include it as mentioned below -->
+    <script src="{% static 'js/theme.js' %}"></script>
+    <!-- optionally if you need translation for your language then include  locale file as mentioned below -->
+    <script src="https://cdn.bootcss.com/bootstrap-fileinput/4.4.8/js/locales/zh.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery.form/4.2.2/jquery.form.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="{% static 'js/index.js' %}"></script>
+    <script>
+        //csrf_token
+        $.ajaxSetup({
+            headers: {"X-CSRFToken": '{{ csrf_token }}'}
+        });
+    </script>
+</head>
+<body>
+<!--Navigation Bar-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top d-flex justify-content-between">
+    <a class="navbar-brand justify-content-start" href="#">Lost &amp; Found</a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent"
+            aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
+        <!--Right Navbar-->
+
+        {% if user.is_authenticated %}
+
+            <div class="dropdown mr-2">
+                <button class="btn btn-light dropdown-toggle" id="userMenu" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                    {% if user.first_name %}
+                        {{ user.first_name }}
+                    {% else %}
+                        {{ user.username }}
+                    {% endif %}
+                </button>
+                <div class="dropdown-menu clearfix" aria-describedby="userMenu">
+                    <a href="/allpost" class="dropdown-item">My Posts</a>
+                    <a href="/profile" class="dropdown-item">Profile</a>
+                    <a href="/settings" class="dropdown-item">Settings</a>
+                    <a href="/logout" class="dropdown-item">Sign out</a>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" data-toggle="modal" data-target="#newPost">New Post</button>
+
+        {% else %}
+
+            <a href="/login">
+                <button class="btn btn-outline-success my-2 my-sm-0">Login</button>
+            </a>
+            <a href="/register">
+                <button class="btn btn-primary ml-2">Sign Up</button>
+            </a>
+
+        {% endif %}
+
+    </div>
+</nav>
+<!--Main Content-->
+<div class="container mt-3">
+
+    {% if user.is_authenticated %}
+        {# Display a badge to welcome the user (nonsense) #}
+
+        <div class="alert alert-info" role="alert">
+            <h4>
+                {% if user.first_name %}
+                    {% if user.last_name %}
+                        Welcome, {{ user.first_name }} {{ user.last_name }}!
+                    {% else %}
+                        Welcome, {{ user.first_name }}!
+                    {% endif %}
+                {% else %}
+                    {% if user.last_name %}
+                        Welcome, {{ user.last_name }}!
+                    {% else %}
+                        Welcome, {{ user.username }}!
+                    {% endif %}
+                {% endif %}
+            </h4>
+
+            <hr>
+
+            <h5>You can now post your lost or found.</h5>
+            <ul>
+                <li>Click "New Post" on the right-top corder to post a new lost / found.</li>
+                <li>Click on your name on the right-top corder to manage your accound.</li>
+            </ul>
+        </div>
+
+    {% endif %}
+
+    <div class="input-group has-feedback">
+        <input type="text" class="form-control" placeholder="Search" id="search" oninput="changeIcon(this)">
+        <div class="input-group-append">
+            <span class="input-group-text btn search-button" id="clear">
+                <i class="fas fa-search" id="icon"></i>
+            </span>
+        </div>
+    </div>
+    <div class="d-flex flex-row mt-3">
+        <div class="dropdown">
+            <button class="btn btn-light dropdown-toggle" data-toggle="dropdown" id="lostOrFound" aria-haspopup="true"
+                    aria-expanded="false">Lost/Found
+            </button>
+            <div class="dropdown-menu" aria-describedby="lostOrFound">
+                <a href="#" class="dropdown-item active" onclick="searching(this, 0)" id="all-status">All</a>
+                <a href="#" class="dropdown-item" onclick="searching(this, 0)" id="all-lost">Lost</a>
+                <a href="#" class="dropdown-item" onclick="searching(this, 0)" id="all-found">Found</a>
+            </div>
+        </div>
+        <div class="dropdown ml-3">
+            <button class="btn btn-light dropdown-toggle" data-toggle="dropdown" id="filterByDate" aria-haspopup="true"
+                    aria-expanded="false">
+                Date
+            </button>
+            <div class="dropdown-menu" aria-describedby="filterByDate">
+                <a href="#" class="dropdown-item active" onclick="searching(this, 1)" id="last-week">Last Week</a>
+                <a href="#" class="dropdown-item" onclick="searching(this, 1)" id="last-month">Last Month</a>
+                <a href="#" class="dropdown-item" onclick="searching(this, 1)" id="all-time">All</a>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex flex-row">
+        <div class="p-2 text-secondary">Results <span class="badge badge-primary badge-pill"
+                                                      id="numOfResults">{{ length }}</span></div>
+    </div>
+    <ul class="list-group mb-5" id="mainTable">
+        <!--Title of table-->
+        <li class="list-group-item bg-light">
+            <div class="row">
+                <div class="col-4 col-md font-weight-bold">Name</div>
+                <div class="col-4 col-md font-weight-bold">Location</div>
+                <div class="col-4 col-md font-weight-bold">Date</div>
+                <div class="col-md font-weight-bold hide-sm">Poster</div>
+                <div class="col font-weight-bold"></div>
+            </div>
+        </li>
+        <!--Table content-->
+        {% for info in data %}
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-4 col-md">
+                        {{ info.name }}
+                        {% if info.status == 'F' %}
+                            <span class="badge badge-info">Found</span>
+                        {% else %}
+                            <span class="badge badge-warning">Lost</span>
+                        {% endif %}
+                    </div>
+                    <div class="col-4 col-md">{{ info.location }}</div>
+                    <div class="col-4 col-md">{{ info.date|date:"Y-m-d" }}</div>
+                    <div class="col-md hide-sm">{{ info.poster }}</div>
+                    <div class="col">
+                        <a href="/detail/{{ info.pid }}">
+                            <button class="btn btn-sm btn-secondary mt-2">View Detail</button>
+                        </a>
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+<!--Modal-->
+
+<!--New Post-->
+<div class="modal fade" id="newPost" tabindex="-1" role="dialog" aria-labelledby="newPost" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content long-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">New Post</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="icon-close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="overflow-y: auto">
+                <form action="/newpost/" id="post-detail" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="objectName">Name</label>
+                        <input type="text" class="form-control" name="objectName" id="objectName"
+                               aria-describedby="nameHelp" required>
+                        <small id="nameHelp" class="form-text text-muted">Name of lost or found object.</small>
+                        <div class="invalid-feedback">
+                            Please input the name of object.
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="status-type">Type</label>
+                        <select name="status-type" id="status-type" class="form-control">
+                            <option value="L">Lost</option>
+                            <option value="F">Found</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="objectName">Location</label>
+                        <input type="text" class="form-control" name="location" id="location"
+                               aria-describedby="locationHelp" required>
+                        <small id="locationHelp" class="form-text text-muted">e.g. T8, V27 Lobby</small>
+                        <div class="invalid-feedback">
+                            Please input the location of object.
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea class="form-control" id="description" rows="3" name="description"
+                                  placeholder="Write your description of the object" required></textarea>
+                        <div class="invalid-feedback">
+                            Please input the description of the object.
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact">Contacts</label>
+                        <textarea class="form-control" id="contact" rows="3" name="contact"
+                                  placeholder="Write whatever ways you want others to contact you" required></textarea>
+                        <div class="invalid-feedback">
+                            Please input contact of you.
+                        </div>
+                    </div>
+                    <label for="photo">Photo</label>
+                    <div class="file-loading">
+                        <input id="photo" name="photo" type="file" class="projectfile" required>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="default" id="default-photo"
+                               name="default">
+                        <label class="form-check-label" for="default-photo">
+                            Use default photo
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btn-close">Close</button>
+                <button type="submit" class="btn btn-primary" id="post" data-toggle="modal"
+                        data-target="#alert-msg-modal">Post
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Alert Modal -->
+<div class="modal fade" id="alert-msg-modal" tabindex="-1" role="dialog" aria-labelledby="alert-msg-label"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Message</h5>
+            </div>
+            <div class="modal-body">
+                <div class="alert" id="alert-msg"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="close-msg">Close</button>
+                <button class="btn btn-primary d-none" id="refresh">Refresh</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
