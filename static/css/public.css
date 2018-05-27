@@ -59,6 +59,11 @@ body {
     width: 100px;
 }
 
+#function-list {
+    display: none;
+    list-style: none;
+    margin-bottom: 5px;
+}
 
 @media (max-width: 767px) {
     .hide-md {
@@ -79,6 +84,12 @@ body {
 
     .options {
         margin-top: 10px;
+    }
+}
+
+@media (max-width: 991px) {
+    #function-list {
+        display: block;
     }
 }
 

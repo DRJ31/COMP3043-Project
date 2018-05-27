@@ -1,4 +1,18 @@
 $(document).ready(function () {
+    if ($(window).width() < 992) {
+        $("#userMenu").attr("disabled", "disabled");
+    }
+    else {
+        $("#userMenu").removeAttr("disabled");
+    }
+    $(window).resize(function () {
+        if ($(window).width() < 992) {
+            $("#userMenu").attr("disabled", "disabled");
+        }
+        else {
+            $("#userMenu").removeAttr("disabled");
+        }
+    });
     $("#clear").click(function () {
         $("#search").val("");
         searching($("#search"), 3);
