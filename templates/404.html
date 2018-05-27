@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
     <meta charset="UTF-8">
     <title>Profile</title>
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
@@ -66,14 +66,25 @@
 
     </div>
 </nav>
-<div class="container mt-3">
+<div class="container-fluid mt-3">
 
-    <div class="alert alert-danger" role="alert">
-        <h4>404 Not Found</h4>
-
+    <div class="alert alert-danger" role="alert" align="center">
+        <h3>404 Not Found</h3>
+        <a href="/" class="btn btn-primary">Back to main page</a>
+        <button class="btn btn-primary" id="change">Change a photo</button>
         <hr>
-
-        <a href="/">Back to main page</a>
+        <img src="//i0.hdslb.com/bfs/activity-plat/cover/20171103/4973pln894.png" alt="" id="bili-img">
+        <br>
     </div>
 
 </div>
+<script>
+    $(document).ready(function () {
+        var num = Math.ceil(Math.random() * 15);
+        $("#bili-img").attr("src", '/static/bili-img/' + num + ".png");
+        $("#change").click(function () {
+            num = Math.ceil(Math.random() * 15);
+            $("#bili-img").attr("src", '/static/bili-img/' + num + ".png");
+        });
+    });
+</script>
