@@ -17,5 +17,6 @@ urlpatterns = [
     path('allpost/', views.all_post),
     path('getkey/', views.get_key),
     path('changeprofile/', views.change_profile),
-    path('changepassword/', views.change_pass)
+    path('changepassword/', views.change_pass),
+    path('getmore/', views.get_more)
 ]

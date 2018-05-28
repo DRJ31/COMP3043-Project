@@ -8,31 +8,43 @@ from django.db.models import Q
 from main.models import Post, PostEncrypt, AuthUser
 from datetime import datetime, timedelta
 import os
+import json
 
 # Create your views here.
 
 
 def index(request): # Index page
     data = []
-    for info in Post.objects.filter(date__range=[datetime.now() - timedelta(days=7), datetime.now()]).order_by('-date'):
+    results = Post.objects.filter(date__range=[datetime.now() - timedelta(days=7), datetime.now()]).order_by('-date')
+    for info in results[0:20]:
         data.append(info)
     return render(request, 'index.html', {
         'data': data,
-        'length': len(data)
+        'length': len(results)
     })
 
 
 def all_post(request): # Show all the post of user
     data = []
-    all = Post.objects.filter(date__range=[datetime.now() - timedelta(days=7), datetime.now()]).order_by('-date')
+    all = Post.objects.all().order_by('-date')[0:20]
     if request.user.is_staff == 0:
-        all = all.filter(poster=request.user.username)
+        all = Post.objects.filter(poster=request.user.username).order_by('-date')[0:20]
     for info in all:
         data.append(info)
     return render(request, 'allpost.html', {
         'data': data,
-        'length': len(data)
     })
+
+def get_more(request):
+    data = []
+    start = int(request.GET['start'])
+    all = Post.objects.all().order_by('-date')[start:start + 20]
+    if request.user.is_staff == 0:
+        all = Post.objects.filter(poster=request.user.username).order_by('-date')[start:start + 20]
+    for info in all:
+        data.append([info.name, info.status, info.location, info.date.strftime("%Y-%m-%d"), info.poster, info.pid])
+    result = json.dumps({'result': data})
+    return HttpResponse(result)
 
 
 def show_detail(request, id): # Detail page
@@ -50,23 +62,66 @@ def show_detail(request, id): # Detail page
 
 def search(request):
     result = []
+    start = int(request.GET['start'])
+    end = int(request.GET['end'])
     key = request.GET['key']
     date = request.GET['date']
     status = request.GET['status']
-    data = Post.objects.filter(status__in=status).order_by("-date")
+    length = int(request.GET['needLength'])
     if len(key) > 0:
-        data = data.filter(Q(name__icontains=key) | Q(location__icontains=key) | Q(poster__icontains=key))
-    if int(date) == 0:
-        data = data.filter(date__range=[datetime.now() - timedelta(days=7), datetime.now()]).order_by("-date")
-    elif int(date) == 1:
-        data = data.filter(date__range=[datetime.now() - timedelta(days=30), datetime.now()]).order_by("-date")
+        if int(date) == 0:
+            data = Post.objects.\
+                filter(status__in=status).\
+                filter(Q(name__icontains=key) | Q(location__icontains=key) | Q(poster__icontains=key)). \
+                filter(date__range=[datetime.now() - timedelta(days=7), datetime.now()]).order_by("-date")[start:end]
+            if length == 1:
+                length = len(Post.objects.only('pid').
+                    filter(status__in=status).
+                    filter(Q(name__icontains=key) | Q(location__icontains=key) | Q(poster__icontains=key)). \
+                    filter(date__range=[datetime.now() - timedelta(days=7), datetime.now()]))
+        elif int(date) == 1:
+            data = Post.objects.\
+                filter(status__in=status).\
+                filter(Q(name__icontains=key) | Q(location__icontains=key) | Q(poster__icontains=key)). \
+                filter(date__range=[datetime.now() - timedelta(days=30), datetime.now()]).order_by("-date")[start:end]
+            if length == 1:
+                length = len(Post.objects.only('pid').
+                    filter(status__in=status).
+                    filter(Q(name__icontains=key) | Q(location__icontains=key) | Q(poster__icontains=key)). \
+                    filter(date__range=[datetime.now() - timedelta(days=30), datetime.now()]))
+        else:
+            data = Post.objects. \
+                filter(status__in=status). \
+                filter(Q(name__icontains=key) | Q(location__icontains=key) | Q(poster__icontains=key)).order_by("-date")[start:end]
+            if length == 1:
+                length = len(Post.objects.only('pid').
+                    filter(status__in=status).
+                    filter(Q(name__icontains=key) | Q(location__icontains=key) | Q(poster__icontains=key)))
+    else:
+        if int(date) == 0:
+            data = Post.objects.\
+                filter(status__in=status).\
+                filter(date__range=[datetime.now() - timedelta(days=7), datetime.now()]).order_by("-date")[start:end]
+            if length == 1:
+                length = len(Post.objects.only('pid').
+                    filter(status__in=status).
+                    filter(date__range=[datetime.now() - timedelta(days=7), datetime.now()]))
+        elif int(date) == 1:
+            data = Post.objects.\
+                filter(status__in=status).\
+                filter(date__range=[datetime.now() - timedelta(days=30), datetime.now()]).order_by("-date")[start:end]
+            if length == 1:
+                length = len(Post.objects.only('pid').
+                    filter(status__in=status).
+                    filter(date__range=[datetime.now() - timedelta(days=30), datetime.now()]))
+        else:
+            data = Post.objects.filter(status__in=status).order_by("-date")[start:end]
+            if length == 1:
+                length = len(Post.objects.only('pid').filter(status__in=status))
     for info in data:
         result.append([info.name, info.status, info.location, info.date.strftime("%Y-%m-%d"), info.poster, info.pid])
-    string = "["
-    for info in result:
-        string += str(info) + ','
-    string = string[:-1] + "]"
-    return HttpResponse(string)
+    results = json.dumps({'result': result, 'length': length})
+    return HttpResponse(results)
 
 
 def register(request):

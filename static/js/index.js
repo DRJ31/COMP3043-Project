@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    var total = 20;
     if ($(window).width() < 992) {
         $("#userMenu").attr("disabled", "disabled");
     }
@@ -12,11 +13,6 @@ $(document).ready(function () {
         else {
             $("#userMenu").removeAttr("disabled");
         }
-    });
-    $("#clear").click(function () {
-        $("#search").val("");
-        searching($("#search"), 3);
-        $("#icon").removeClass("fa-times").addClass("fa-search");
     });
     $("#photo").fileinput({
         theme: "fas",
@@ -48,26 +44,68 @@ $(document).ready(function () {
     $("#refresh").click(function () {
         location.reload();
     });
+    $("#btn-search").click(function () {
+        searching(null, 2, 0, 20);
+    });
+    $(document).keyup(function (e) {
+        if (e.keyCode === 13)
+            searching(null, 2, 0, 20);
+    });
+    $(document).scroll(function () {
+        if ($(document).scrollTop() + window.innerHeight === $(document).height()) {
+            load_more(total);
+            total += 20;
+        }
+    });
 });
 
-function changeIcon(obj) {
-    searching(obj, 3);
-    if ($("#search").val().length > 0)
-        $("#icon").removeClass("fa-search").addClass("fa-times");
-    else
-        $("#icon").removeClass("fa-times").addClass("fa-search");
-
+function load_more(start) {
+    var data = get_data(null, 2);
+    $.get("search", {
+        key: $("#search").val(),
+        status: '[' + data[0].toString() + ']',
+        date: data[1],
+        start: start,
+        end: start + 20,
+        needLength: 0
+    }, function (data) {
+        var str = '';
+        data = JSON.parse(data);
+        var arr = data['result'];
+        for (var i = 0; i < arr.length; i++) {
+            str += '<li class="list-group-item">\n' +
+                '            <div class="row">\n' +
+                '                <div class="col-4 col-md">' +
+                arr[i][0];
+            if (arr[i][1] === 'F')
+                str += ' <span class="badge badge-info">Found</span>';
+            else
+                str += ' <span class="badge badge-warning">Lost</span>';
+            str += '</div>\n' +
+                '                <div class="col-4 col-md">' + arr[i][2] + '</div>\n' +
+                '                <div class="col-4 col-md">' + arr[i][3] + '</div>\n' +
+                '                <div class="col-md hide-sm">' + arr[i][4] + '</div>\n' +
+                '                <div class="col">\n' +
+                '                    <a href="/detail/' + arr[i][5] + '"><button class="btn btn-sm btn-secondary m-auto">View Detail</button></a>' +
+                '                </div>\n' +
+                '            </div>\n' +
+                '        </li>';
+        }
+        $("#mainTable").append(str);
+    });
 }
+
 
 function get_data(obj, type) {
     var data = [];
     if (type === 0) {
         $("#all-status, #all-found, #all-lost").removeClass('active');
+        $(obj).addClass('active');
     }
     else if (type === 1) {
         $("#all-time, #last-week, #last-month").removeClass('active');
+        $(obj).addClass('active');
     }
-    $(obj).addClass('active');
 
     // Lost / Found (Dropdown 1)
     if ($("#all-status").hasClass('active')) {
@@ -94,12 +132,15 @@ function get_data(obj, type) {
     return data;
 }
 
-function searching(obj, type) {
+function searching(obj, type, start, end) {
     var data = get_data(obj, type);
     $.get("search", {
         key: $("#search").val(),
         status: '[' + data[0].toString() + ']',
-        date: data[1]
+        date: data[1],
+        start: start,
+        end: end,
+        needLength: 1
     }, function (data) {
         printHTML(data);
     });
@@ -115,13 +156,9 @@ function printHTML(data) {
         '                <div class="col font-weight-bold"></div>\n' +
         '            </div>\n' +
         '        </li>';
-    if (data === ']') {
-        $("#numOfResults").html(0);
-        $("#mainTable").html(str);
-        return;
-    }
-    var arr = eval(data);
-    $("#numOfResults").html(arr.length);
+    data = JSON.parse(data);
+    var arr = data['result'];
+    $("#numOfResults").html(data['length']);
     for (var i = 0; i < arr.length; i++) {
         str += '<li class="list-group-item">\n' +
             '            <div class="row">\n' +

@@ -26,11 +26,20 @@
     <script>
         //csrf_token
         $.ajaxSetup({
-            headers: {"X-CSRFToken": '{{ csrf_token }}'}
+            headers: {"X-CSRFToken": '{{ csrf_token }}'},
+            beforeSend: function () {
+                $("#ld").css('z-index', 1000).removeClass('d-none');
+            },
+            complete: function () {
+                $("#ld").css('z-index', -1).addClass('d-none');
+            }
         });
     </script>
 </head>
 <body>
+<div id="ld" class="d-none">
+    <img src="/static/img/loading1.gif" alt="">
+</div>
 <!--Navigation Bar-->
 <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top d-flex justify-content-between">
     <a class="navbar-brand justify-content-start" href="#">Lost &amp; Found</a>
@@ -117,9 +126,9 @@
     {% endif %}
 
     <div class="input-group has-feedback">
-        <input type="text" class="form-control" placeholder="Search" id="search" oninput="changeIcon(this)">
+        <input type="text" class="form-control" placeholder="Search" id="search">
         <div class="input-group-append">
-            <span class="input-group-text btn search-button" id="clear">
+            <span class="input-group-text btn search-button" id="btn-search">
                 <i class="fas fa-search" id="icon"></i>
             </span>
         </div>
@@ -130,9 +139,9 @@
                     aria-expanded="false">Lost/Found
             </button>
             <div class="dropdown-menu" aria-describedby="lostOrFound">
-                <a href="#" class="dropdown-item active" onclick="searching(this, 0)" id="all-status">All</a>
-                <a href="#" class="dropdown-item" onclick="searching(this, 0)" id="all-lost">Lost</a>
-                <a href="#" class="dropdown-item" onclick="searching(this, 0)" id="all-found">Found</a>
+                <a href="#" class="dropdown-item active" onclick="searching(this, 0, 0, 20)" id="all-status">All</a>
+                <a href="#" class="dropdown-item" onclick="searching(this, 0, 0, 20)" id="all-lost">Lost</a>
+                <a href="#" class="dropdown-item" onclick="searching(this, 0, 0, 20)" id="all-found">Found</a>
             </div>
         </div>
         <div class="dropdown ml-3">
@@ -141,9 +150,10 @@
                 Date
             </button>
             <div class="dropdown-menu" aria-describedby="filterByDate">
-                <a href="#" class="dropdown-item active" onclick="searching(this, 1)" id="last-week">Last Week</a>
-                <a href="#" class="dropdown-item" onclick="searching(this, 1)" id="last-month">Last Month</a>
-                <a href="#" class="dropdown-item" onclick="searching(this, 1)" id="all-time">All</a>
+                <a href="#" class="dropdown-item active" onclick="searching(this, 1, 0, 20)" id="last-week">Last
+                    Week</a>
+                <a href="#" class="dropdown-item" onclick="searching(this, 1, 0, 20)" id="last-month">Last Month</a>
+                <a href="#" class="dropdown-item" onclick="searching(this, 1, 0, 20)" id="all-time">All</a>
             </div>
         </div>
     </div>
