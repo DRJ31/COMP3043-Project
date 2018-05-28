@@ -1,9 +1,20 @@
 $(document).ready(function () {
     var total = 20;
+    var finish = false;
     $(document).scroll(function () {
         if ($(document).scrollTop() + window.innerHeight === $(document).height()) {
-            load_more(total);
-            total += 20;
+            if (!finish) {
+                $.get('/getmore/', {start: total, length: length}, function (data) {
+                    data = JSON.parse(data);
+                    var arr = data['result'];
+                    if (arr.length === 0) {
+                        finish = true;
+                        return;
+                    }
+                    printHTML(arr);
+                });
+                total += 20;
+            }
         }
     });
     $("#photo").fileinput({
@@ -38,37 +49,35 @@ $(document).ready(function () {
     });
 });
 
-function load_more(start) {
-    $.get('/getmore/', {start: start}, function (data) {
-        var str = '';
-        data = JSON.parse(data);
-        var arr = data['result'];
-        for (var i = 0; i < arr.length; i++) {
-            str += '<li class="list-group-item">\n' +
-                '<div class="row">\n' +
-                '<div class="col-4 col-md">' +
-                arr[i][0];
-            if (arr[i][1] === 'F')
-                str += ' <span class="badge badge-info">Found</span>';
-            else
-                str += ' <span class="badge badge-warning">Lost</span>';
-            str += '</div>\n' +
-                '<div class="col-4 col-md">' + arr[i][2] + '</div>\n' +
-                '<div class="col-4 col-md">' + arr[i][3] + '</div>\n' +
-                '<div class="col options">\n' +
-                '<a href="/detail/' + arr[i][5] + '">' +
-                '<button class="btn btn-sm btn-secondary">Detail</button>'+
-                '</a>\n'+
-                '<button class="btn btn-sm btn-danger btn-delete" data-toggle="modal" data-target="#confirm-delete-modal" onclick="get_data(this)">' +
-                'Delete' +
-                '</button>' +
-                '</div>\n' +
-                '</div>\n' +
-                '</li>';
-        }
-        $("#mainTable").append(str);
-    });
+
+function printHTML(arr) {
+    var str = "";
+    for (var i = 0; i < arr.length; i++) {
+        str += '<li class="list-group-item">\n' +
+            '<div class="row">\n' +
+            '<div class="col-4 col-md">' +
+            arr[i][0];
+        if (arr[i][1] === 'F')
+            str += ' <span class="badge badge-info">Found</span>';
+        else
+            str += ' <span class="badge badge-warning">Lost</span>';
+        str += '</div>\n' +
+            '<div class="col-4 col-md">' + arr[i][2] + '</div>\n' +
+            '<div class="col-4 col-md">' + arr[i][3] + '</div>\n' +
+            '<div class="col options">\n' +
+            '<a href="/detail/' + arr[i][5] + '">' +
+            '<button class="btn btn-sm btn-secondary">Detail</button>' +
+            '</a>\n' +
+            '<button class="btn btn-sm btn-danger btn-delete" data-toggle="modal" data-target="#confirm-delete-modal" onclick="get_data(this)">' +
+            'Delete' +
+            '</button>' +
+            '</div>\n' +
+            '</div>\n' +
+            '</li>';
+    }
+    $("#mainTable").append(str);
 }
+
 
 function checkForm() {
     var status = true;
