@@ -48,14 +48,27 @@ $(document).ready(function () {
         searching(null, 2, 0, 20);
     });
     $(document).keyup(function (e) {
-        if (e.keyCode === 13)
+        if (e.keyCode === 13 || $("#search").val().length === 0)
             searching(null, 2, 0, 20);
     });
     $(document).scroll(function () {
         if ($(document).scrollTop() + window.innerHeight === $(document).height()) {
-            load_more(total);
-            total += 20;
+            if ($("#numOfResults").html() > total) {
+                load_more(total);
+                total += 20;
+            }
         }
+    });
+    $("#search").bind('input', function () {
+        if ($("#search").val().length > 0)
+            $("#btn-clear").removeClass('d-none');
+        else
+            $("#btn-clear").addClass('d-none');
+    });
+    $("#btn-clear").click(function () {
+        $("#search").val("");
+        $("#btn-clear").addClass('d-none');
+        searching(null, 2, 0, 20);
     });
 });
 

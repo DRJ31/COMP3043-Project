@@ -7,6 +7,27 @@ body {
     border-left: white;
 }
 
+#search {
+    outline: none;
+    box-shadow: none;
+    border-right: white;
+}
+
+#search:focus {
+    border: 1px solid #ced4da;
+    border-right: white;
+}
+
+#btn-clear {
+    border-top: 1px solid #ced4da;
+    border-bottom: 1px solid #ced4da;
+    border-right: white;
+    color: #495057;
+    font-size: 20px;
+    line-height: 35px;
+    padding-right: 10px;
+}
+
 .form-signin {
     width: 100%;
     text-align: center;
@@ -74,8 +95,9 @@ body {
     margin-left: -125px;
     margin-top: -125px;
     z-index: -1;
-
 }
+
+
 
 @media (max-width: 767px) {
     .hide-md {
