@@ -69,10 +69,10 @@ body {
     position: fixed;
     top: 50%;
     left: 50%;
-    width: 200px;
-    height: 150px;
-    margin-left: -100px;
-    margin-top: -75px;
+    width: 250px;
+    height: 250px;
+    margin-left: -125px;
+    margin-top: -125px;
     z-index: -1;
 
 }
