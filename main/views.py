@@ -132,7 +132,12 @@ def register(request):
         first_name = request.POST["firstname"]
         last_name = request.POST["lastname"]
         password = request.POST["password"]
+        confirm_password = request.POST["confirm"]
         email = request.POST["email"]
+
+        # A second check here to prevent mismatch password confirmation
+        if password != confirm_password:
+            return render(request, 'register.html', {"error": "2 Passwords do not match"})
 
         user = User(
             username=username,
